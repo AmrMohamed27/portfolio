@@ -1,58 +1,66 @@
-# Motion, Animation & Aesthetics Guidelines
+# Motion, Interaction & Animation Guidelines
 ## Engineering Motion System & Framer Motion Specification
-**Primary Reference:** `framer-motion-animator` skill  
-**Philosophy:** Motion serves comprehension, spatial continuity, and technical feedback—never passive decoration.  
-**Tone:** Snappy, physics-based, disciplined, and purposeful.
+**Reference Standards:** `framer-motion-animator`, WCAG 2.2 Accessible Motion Guidelines  
+**Core Purpose:** Provide purposeful spatial orientation, snappy feedback, and system comprehension. Zero superfluous delays.  
+**Execution Environment:** Next.js 16 (React 19) + Framer Motion.
 
 ---
 
-## 1. Core Motion Principles (The "Why")
+## 1. Core Motion Principles & UX Performance
 
-1. **Answer Action, Don't Distract:** Motion should be the direct result of a user gesture (clicking, hovering, scrolling, toggling) or a single coordinated arrival on initial load.
-2. **Speed Over Drama:** Standard interactions must complete within `150ms–250ms`. Never make a hiring manager wait for a slow 800ms float animation before they can click your resume or case study.
-3. **Hardware Acceleration First:** Only animate `transform` (`x`, `y`, `scale`) and `opacity`. Never animate `width`, `height`, `margin`, or `top` to prevent expensive CPU layout recalculations.
-4. **Strict Accessibility (Prefers-Reduced-Motion):** Always honor system accessibility settings using Framer Motion's `useReducedMotion()`. When active, eliminate positional movement and fallback to simple instant opacity changes or zero transitions.
+1. **Snappy Over Dramatic:** Standard micro-interactions and button hover responses must resolve in under **180ms**. Technical recruiters must never wait for an animation to complete before they can click or scroll.
+2. **Physics-Driven Springs:** Natural spring mechanics replace static ease-in/ease-out curves to create a responsive, tactile interface.
+3. **Strict GPU Acceleration:** Only animate compositor-friendly properties: `opacity` and `transform` (`x`, `y`, `scale`). Never animate layout properties like `height`, `width`, `padding`, or `margin`.
+4. **First-Class Accessibility (`prefers-reduced-motion`):** System accessibility settings are honored unconditionally using Framer Motion's `useReducedMotion()`. If enabled, all spatial translations (`y: 20 -> 0`) are disabled, and elements appear instantly or via gentle opacity fades.
 
 ---
 
-## 2. Animation Token Catalog & Spring Physics
-
-Instead of artificial cubic beziers, we use natural spring physics tailored to interactive elements:
+## 2. Motion Token Catalog (Spring Physics Presets)
 
 ```typescript
-// Motion Token Presets
+// src/lib/motion-tokens.ts
 export const motionTokens = {
-  // Snappy micro-interactions (Buttons, tabs, chips)
-  snappySpring: {
+  // Micro-interactions (Buttons, links, filter pills, copy triggers)
+  microSpring: {
     type: 'spring',
-    stiffness: 400,
-    damping: 25,
-    mass: 0.5,
+    stiffness: 450,
+    damping: 28,
+    mass: 0.6,
   },
-  // Smooth structural transitions (Cards, modal drawers)
-  gentleSpring: {
+
+  // Structural Entrance & Scroll Reveals (Section cards, metric cells)
+  revealSpring: {
     type: 'spring',
-    stiffness: 260,
-    damping: 20,
+    stiffness: 280,
+    damping: 24,
+    mass: 0.8,
   },
-  // Linear easing for continuous indicators (Pulse pings, stream flows)
-  linearPulse: {
-    duration: 2,
+
+  // Ambient Telemetry Pulses (Live status beacon, network data nodes)
+  ambientPulse: {
+    duration: 2.2,
     repeat: Infinity,
     ease: 'easeInOut',
   },
+
+  // Toast / Notification Pops
+  toastSpring: {
+    type: 'spring',
+    stiffness: 500,
+    damping: 30,
+  }
 };
 ```
 
 ---
 
-## 3. Component-by-Component Framer Motion Blueprint
+## 3. Coordinated Motion Blueprints by Component
 
-### A. Coordinated Initial Page Entrance (Hero Sequence)
-* **Design Intent:** A single orchestrated entrance stagger rather than scattered chaotic elements popping in.
-* **Framer Motion Pattern:**
+### 3.1. Hero Entrance Sequence (Staggered Staging)
+Instead of disjointed components flashing on screen, the Hero uses a single orchestrated stagger container:
+
 ```tsx
-export const heroContainerVariants = {
+export const heroStaggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -63,80 +71,62 @@ export const heroContainerVariants = {
   },
 };
 
-export const heroChildVariants = {
-  hidden: { opacity: 0, y: 12 },
+export const heroChildVariant = {
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: 'spring', stiffness: 300, damping: 24 },
+    transition: motionTokens.revealSpring,
   },
 };
 ```
 
-### B. Interactive Case Study Cards
-* **Design Intent:** Tactile feedback on hover; subtle lift that clarifies clickable hit area.
-* **Rule:** Restrict scaling to maximum `1.015` or `y: -3px`. Extreme card floating or 3D tilt effects look juvenile and distract from technical copy.
-* **Framer Motion Pattern:**
-```tsx
-<motion.div
-  whileHover={{ y: -3, borderColor: 'var(--border-focus)' }}
-  whileTap={{ scale: 0.99 }}
-  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-  className="border border-[var(--border-subtle)] bg-[var(--bg-surface)] rounded-xl p-6"
->
-  {/* Card Content */}
-</motion.div>
-```
+### 3.2. Metrics Telemetry Cards (Viewport Stagger)
+- **Trigger:** When scrolled into view (`viewport: { once: true, margin: '-60px' }`).
+- **Effect:** Each of the 5 metric cards elevates sequentially with a `0.06s` stagger delay.
+- **Numbers:** Tabular font figures render cleanly with an opacity ramp.
 
-### C. Live Architecture Blueprint Animations
-* **Design Intent:** Visually illustrate query flows, Redis cache hits vs. database misses, and SSE worker queues.
-* **Rule:** Keep data packets subtle. Tiny glowing pulses traveling across connector pathways, giving life to system diagrams.
-* **Implementation:** Animate SVG `strokeDashoffset` or moving dot coordinates along predefined paths on scroll into view (`whileInView`).
+### 3.3. Interactive Architecture Case Study Cards
+- **Hover Micro-Interaction:**
+  - Card boundary shifts from `var(--border-subtle)` to `var(--border-hover)`.
+  - Elevation: `y: -3px` with subtle shadow expansion.
+  - Duration: `160ms`.
+- **System Schematic Interaction:**
+  - Active data-flow path lights up with a subtle cyan glow on hover.
 
-### D. Deep-Dive Modal / Case Study Drawer
-* **Design Intent:** Spatial continuity when drilling down into full architecture blueprints.
-* **Framer Motion Pattern (`AnimatePresence`):**
-```tsx
-<AnimatePresence>
-  {selectedCaseStudy && (
-    <>
-      <motion.div
-        key="backdrop"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm z-40"
-      />
-      <motion.div
-        key="drawer"
-        initial={{ opacity: 0, y: 24, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 16, scale: 0.98 }}
-        transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-        className="fixed inset-x-4 top-16 bottom-16 md:inset-x-auto md:max-w-3xl z-50 overflow-y-auto"
-      >
-        {/* Case Study Details */}
-      </motion.div>
-    </>
-  )}
-</AnimatePresence>
-```
+### 3.4. Interactive Capabilities Filter Matrix
+- **Tab Selection Transition:**
+  - The active pill background uses Framer Motion's `layoutId="activeFilterTab"` to smoothly glide across tabs without layout thrash.
+- **Grid Reordering:**
+  - Filtered skill tiles animate in and out with `<AnimatePresence mode="popLayout">`:
+  - Entering items: `opacity: 0, scale: 0.95` -> `opacity: 1, scale: 1`.
+  - Exiting items: `opacity: 0, scale: 0.95`.
 
-### E. Floating Navigation Bar (Scroll-Aware)
-* **Design Intent:** Get out of the user's way when reading down; instantly present conversion actions when scrolling up.
-* **Pattern:** Track `useScroll()` delta. Animate `y: -100%` when scrolling down, `y: 0` when scrolling up.
+### 3.5. Instant Conversion Dock & Toast Micro-Interaction
+- **Email Copy Button:**
+  - On click: Button scales to `0.96` on tap, then returns to `1.0`.
+  - Icon smoothly morphs from `Copy` to `Check` (green indicator).
+  - Floating toast slides in from bottom: `y: 10 -> 0`, `opacity: 0 -> 1` with a 2.5-second auto-dismiss.
 
 ---
 
-## 4. What TO Do vs. What NOT To Do
+## 4. Reduced Motion Fallback Implementation
 
-| What TO Do (Best Practices) | What NOT To Do (Avoid at all costs) |
-| :--- | :--- |
-| **Do:** Keep durations snappy (`150ms–250ms`). | **Don't:** Long, sluggish transitions (`> 500ms`) that delay interaction. |
-| **Do:** Use `AnimatePresence` with unique `key` props for clean unmounts. | **Don't:** Leave elements abruptly popping in/out without layout continuity. |
-| **Do:** Use subtle spring damping (`damping: 20-30`, `stiffness: 300-400`). | **Don't:** Bouncy rubber-band wobble effects that feel like a cartoon. |
-| **Do:** Animate only `transform` and `opacity`. | **Don't:** Animate `height`, `width`, `padding`, or `border-width` (jank). |
-| **Do:** Respect `prefers-reduced-motion` via `useReducedMotion()`. | **Don't:** Force heavy motion onto users with vestibular motion sensitivity. |
-| **Do:** Limit hover micro-motion to `< 3px` translation or `< 1.02` scale. | **Don't:** Extreme 3D card tilts, mouse-following spotlights that lag the cursor. |
-| **Do:** Stagger lists by small increments (`staggerChildren: 0.05s`). | **Don't:** Long staggered chains where the last element takes 3 seconds to appear. |
-| **Do:** Provide instant tactile feedback on click (`whileTap={{ scale: 0.98 }}`). | **Don't:** Dead buttons with no active or focus states. |
+```tsx
+'use client';
+import { useReducedMotion } from 'framer-motion';
+
+export function useAccessibleMotion() {
+  const prefersReduced = useReducedMotion();
+
+  return {
+    prefersReduced,
+    revealTransition: prefersReduced ? { duration: 0.01 } : motionTokens.revealSpring,
+    slideTransform: prefersReduced ? { y: 0 } : { y: 16 },
+  };
+}
+```
+If `prefers-reduced-motion: reduce` is detected in the operating system:
+1. Positional movements (`y`, `x`) are eliminated.
+2. Only instantaneous or subtle opacity transitions (`duration: 0.15s`) are allowed.
+3. No infinite pulsing animations that could trigger vestibular distress.

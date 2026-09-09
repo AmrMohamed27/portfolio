@@ -1,26 +1,120 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surface & Canvas Hierarchy - Obsidian Precision */
+  --bg-canvas: #06090F;
+  --bg-surface-elevated: #0B111E;
+  --bg-surface-hover: #111C30;
+  --bg-surface-glass: rgba(11, 17, 30, 0.78);
+  --bg-terminal: #04060A;
+
+  /* Hairline Structural Boundaries */
+  --border-subtle: #1E293B;
+  --border-muted: #151F30;
+  --border-hover: #334155;
+  --border-accent: #38BDF8;
+
+  /* Typography Colors (WCAG 2.2 AAA Contrast Standards) */
+  --text-primary: #F8FAFC;         /* 18.2:1 against canvas */
+  --text-secondary: #94A3B8;       /* 8.1:1 against surface */
+  --text-muted: #64748B;           /* 4.8:1 against surface */
+  --text-code: #E2E8F0;
+
+  /* Semantic Accent Channels */
+  --accent-primary: #2563EB;
+  --accent-primary-hover: #1D4ED8;
+  --accent-cyan: #38BDF8;
+  --accent-cyan-subtle: rgba(56, 189, 248, 0.12);
+  --accent-emerald: #10B981;
+  --accent-emerald-subtle: rgba(16, 185, 129, 0.12);
+
+  /* Radii Tokens */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Elevation Shadows */
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-subtle);
+  --shadow-glow-cyan: 0 0 25px -5px rgba(56, 189, 248, 0.25);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* Tailwind CSS Fallbacks / System tokens */
+  --background: var(--bg-canvas);
+  --foreground: var(--text-primary);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg-canvas);
+  --color-foreground: var(--text-primary);
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface-elevated);
+  --color-surface-hover: var(--bg-surface-hover);
+  --color-surface-glass: var(--bg-surface-glass);
+  --color-terminal: var(--bg-terminal);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-muted: var(--border-muted);
+  --color-border-hover: var(--border-hover);
+  --color-border-accent: var(--border-accent);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-code: var(--text-code);
+
+  --color-accent: var(--accent-primary);
+  --color-accent-hover: var(--accent-primary-hover);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-cyan-subtle: var(--accent-cyan-subtle);
+  --color-accent-emerald: var(--accent-emerald);
+  --color-accent-emerald-subtle: var(--accent-emerald-subtle);
+
+  --font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Monospace Tabular Figures for Telemetry & Metrics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus Ring Accessibility (WCAG 2.2) */
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Custom Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
 }

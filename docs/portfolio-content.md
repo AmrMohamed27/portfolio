@@ -1,199 +1,185 @@
-# Portfolio Content & Architecture Case Studies
-
-This document contains the complete, production-grade copy, metrics, and system architecture blueprints for your personal portfolio. Designed to demonstrate practical problem solving, clean system design, and product impact to technical recruiters, Engineering Managers, and CTOs.
-
----
-
-## 1. Hero & Value Proposition
-
-### Headline
-**Amr Mohamed — Full-Stack & Distributed Systems Engineer**
-
-### Subheadline / Tagline
-> Product-focused engineer bridging high-performance distributed backends with slick, accessible web applications. Specializing in TypeScript, Next.js, NestJS, and PostgreSQL.
-
-### Quick Stats Bar (Social Proof Ticker)
-- **77% Latency Reduction** | Slashed report generation from 35s to 8s with semantic caching
-- **80% Cost Savings** | Cut enterprise LLM token overhead via context-chunking pipelines
-- **20+ DB Connectors** | Universal data engine spanning SQL, NoSQL & legacy ERPs
-- **14-Day Delivery** | Built production-grade SaaS platforms from zero to launch
-- **9 Engineers Mentored** | Architecture, API design contracts & engineering standards
-
-### CTAs
-- `[Explore Case Studies]` (Smooth scroll)
-- `[View Resume (PDF)]` (Direct download)
-- `[Get in Touch]` (One-click email copy & LinkedIn)
+# Portfolio Content & System Architecture Blueprints
+## Professional Narrative & Verifiable Case Studies
+**Persona:** Amr Mohamed — Full-Stack & Core Systems Software Engineer  
+**Contact:** `amr.mohamed.dev27@gmail.com` | WhatsApp: `+201026046755` | [LinkedIn](https://linkedin.com/in/amr-mohamed-07615024b) | [GitHub](https://github.com/amr-mohamed27)  
+**Location / Availability:** Cairo / Remote Global & Gulf (UTC+2 / UTC+3) — Immediate Availability
 
 ---
 
-## 2. Core Case Studies
+## 1. Executive Headline & Value Proposition
+
+### Primary Headline
+**Amr Mohamed — Full-Stack & Core Systems Software Engineer**
+
+### Value Proposition Thesis
+> Technical anchor bridging high-throughput distributed backends with high-performance web applications. Specializing in TypeScript, Next.js, NestJS, and PostgreSQL. Proven track record slashing query latency by 77%, engineering air-gapped AI platforms for government clients, and mentoring engineering teams from concept to production.
 
 ---
 
-### Case Study 1: Enterprise Data Engine & Query Latency Optimization
-**Product:** MyQuery.AI Core Platform  
-**Role:** Core Full-Stack Architect  
-**Stack:** NestJS, TypeScript, Next.js, PostgreSQL, Redis, ClickHouse, Docker, BullMQ  
+## 2. Hard-Evidence Telemetry (The Social Proof Ticker)
 
-#### The Problem & Context
-Enterprise users connecting high-volume analytics databases experienced heavy report generation bottlenecks. Complex analytical queries combined with LLM summarization took upwards of 35–45 seconds per report, leading to client drop-offs and spiraling LLM token costs as repeated queries submitted redundant raw schema context.
-
-#### The Technical Solution
-1. **Semantic Caching Layer:** Implemented a two-tier Redis caching strategy. Exact query matches resolve in sub-millisecond memory fetches, while semantic vector hashes evaluate query similarity before invoking database engines or LLMs.
-2. **Execution Streaming & Async Queues:** Decoupled long-running queries via BullMQ background workers with WebSocket-based SSE (Server-Sent Events) streaming progress updates to the Next.js frontend.
-3. **Context-Chunking & Schema Introspection:** Built dynamic schema introspection that only extracts active table relations rather than whole-database DDLs, drastically reducing context window overhead.
-4. **Universal Connector Gateway:** Built a unified connection pooling and dialect translation layer supporting 20+ database engines (PostgreSQL, ClickHouse, Snowflake, MongoDB, IBM Db2, Oracle).
-
-#### Key Architecture Diagram
 ```
-[ Next.js Client ] 
-       │ (SSE / WebSockets)
-       ▼
-[ API Gateway / NestJS ] ──── (Cache Hit: <10ms) ────► [ Redis Semantic Cache ]
-       │                                                      │
- (Cache Miss)                                                 │
-       ▼                                                      │
-[ BullMQ Worker Queue ] ──► [ Connection Pooler ]             │
-       │                              │                       │
-       ▼                              ▼                       ▼
-[ Context Chunking ]        [ 20+ DB Connectors ]      [ Response Stream ]
-       │                    (Postgres, Clickhouse,            │
-       ▼                     Snowflake, Db2, etc.)            ▼
-[ LLM Provider / Local ] ─────────────────────────────► [ Client UI ]
+┌─────────────────┬────────────────────────────────────────────────────────────────────────┐
+│ Metric Figure   │ Verifiable Technical Context                                           │
+├─────────────────┼────────────────────────────────────────────────────────────────────────┤
+│ 77% Latency ↓   │ Slashed report generation from 35s to 8s via two-tier semantic caching │
+│ 80% Cost ↓      │ Cut enterprise LLM token overhead via dynamic context chunking         │
+│ 20+ DB Engines  │ Engineered universal connector gateway (Postgres, ClickHouse, DB2)     │
+│ 14-Day Delivery │ Shipped zero-to-one production AI platform with Etimad API integration │
+│ 9 Engineers     │ Guided team across architectural standards, API contracts & reviews    │
+└─────────────────┴────────────────────────────────────────────────────────────────────────┘
 ```
 
-#### Quantified Impact & Results
-- **77% Latency Cut:** Slashed end-to-end report generation from **35s+ down to ~8s**.
-- **80% Cost Reduction:** Minimized redundant LLM token usage across enterprise tenants.
-- **Enterprise Scale:** Handled queries across 20+ distinct database engines with connection reuse and zero connection pool exhaustion.
+---
+
+## 3. Flagship Architectural Case Studies
 
 ---
 
-### Case Study 2: Rapid 14-Day Delivery — Trseah AI Proposal Studio
-**Product:** Trseah AI Tender Proposal Platform  
-**Client/Context:** Saudi Government Etimad Tender Integration  
-**Role:** Lead Full-Stack Architect  
-**Stack:** Next.js (App Router), Tailwind CSS, NestJS, Python (FastAPI), LangChain, PostgreSQL, Docker  
+### Case Study 1: MyQuery.AI (Cloud & On-Premise Enterprise Edition)
+- **Role:** Core Full-Stack Architect
+- **Product:** Natural-language to multi-dialect SQL enterprise analytics platform
+- **Stack:** Next.js, TypeScript, NestJS, PostgreSQL, Redis, ClickHouse, Snowflake, Docker, GCP
+- **Scale:** 200+ active enterprise users, deployed air-gapped to UAE government entity.
 
-#### The Problem & Context
-Saudi government procurement tenders published through the Etimad portal involve massive, multi-document RFPs (often 100+ pages of requirements, compliance terms, and technical specifications). Bidding teams faced tight submission windows and spent days manually digesting specs, cross-checking compliance, and drafting technical proposals.
+#### The Problem & Bottleneck
+Enterprise users running queries against high-volume databases experienced severe report generation latency (35–45 seconds per report). Redundant natural-language queries caused massive LLM token waste by re-submitting complete database schemas repeatedly, driving up cloud inference costs and exhausting connection pools.
 
-#### The Technical Solution
-1. **Automated RFP Parsing Pipeline:** Built an ingestion microservice in Python (FastAPI) and LangChain to parse, chunk, and index complex multi-document tender PDFs with OCR and metadata extraction.
-2. **Interactive Live Proposal Studio:** Engineered an interactive split-screen Next.js workspace where users preview live-rendered PDF proposals alongside an AI-assisted Markdown editor with real-time formatting.
-3. **Etimad Compliance Engine:** Automated requirement extraction against official Saudi Etimad tender criteria, highlighting missing certifications or bid requirements.
-4. **Zero-to-One 14-Day Delivery:** Architected database schemas, authentication, billing workflows, and PDF generation engines, delivering a complete end-to-end working platform in a single 2-week sprint.
+#### The Architectural Solution
+1. **Two-Tier Semantic Caching Layer:** Architected a hybrid Redis cache. Exact query hashes resolve in `<10ms`, while semantic vector embeddings evaluate query similarity before invoking the LLM or database cluster.
+2. **Dynamic Schema Introspection & Context Chunking:** Engineered an intelligent DDL parser that inspects and injects only relevant table relations into the LLM prompt rather than whole-database schemas, cutting token payload size by 80%.
+3. **Decoupled Asynchronous Workers:** Shifted execution to BullMQ queue workers with real-time SSE (Server-Sent Events) streaming progress indicators directly to the Next.js frontend.
+4. **Air-Gapped Government Edition:** Packaged the entire platform for on-premise UAE government deployment with local LLMs, BGE-M3 embeddings, Whisper STT, and an offline cryptographic asymmetric license validator.
 
-#### Key Architecture Diagram
+#### System Architecture Schematic
 ```
-[ Multi-Doc PDF Tender ] ──► [ FastAPI Parsing Worker ] ──► [ LangChain RAG & Vector Index ]
-                                                                     │
-                                                                     ▼
-[ Next.js Proposal Studio ] ◄── (Live Sync) ──► [ NestJS Core API + PostgreSQL ]
+[ Next.js Client Dashboard ]
+         │ (SSE / Real-time Progress Stream)
+         ▼
+[ NestJS API Gateway ] ────────── (Exact Hit: <10ms) ────────► [ Redis Cache ]
+         │
+    (Cache Miss)
+         ▼
+[ Context-Chunking Pipeline ] ──► [ Semantic Vector Index ] ──► [ BGE-M3 / LLM ]
          │
          ▼
-[ Live Styled PDF Engine ] ──► [ Ready-to-Submit Etimad Proposal ]
-```
-
-#### Quantified Impact & Results
-- **14-Day Turnaround:** Conceptualized, built, and launched the full platform in a 14-day development sprint.
-- **10x Faster Bidding:** Reduced RFP analysis and proposal draft creation from days to under 30 minutes.
-- **Flawless Formatting:** Real-time PDF rendering guaranteed compliance with government layout guidelines.
-
----
-
-### Case Study 3: Air-Gapped Enterprise AI & Hardware Security Platform
-**Client:** UAE Government Entity & Enterprise eInvoicing Platform  
-**Role:** Core Systems & Security Engineer  
-**Stack:** NestJS, Docker Compose, Linux, RSA Asymmetric Cryptography, PKCS#11 HSMs, BullMQ, Redis  
-
-#### The Problem & Context
-Government clients required sophisticated AI capabilities (document processing, transcription, and contextual intelligence) but operated within strict zero-trust, completely air-gapped environments with zero outbound internet connectivity. Additionally, tax compliance workflows (ETA e-Invoicing) mandated hardware-level digital signing with cryptographic HSM tokens.
-
-#### The Technical Solution
-1. **Air-Gapped Deployment Bundle:** Packaged local containerized AI inference models (GPT-OSS, BGE-M3 embeddings, Whisper STT) completely decoupled from public cloud APIs.
-2. **Asymmetric Offline Licensing Engine:** Designed a tamper-proof cryptographic licensing engine using 4096-bit RSA public/private key verification. The system validates signed hardware fingerprints offline without ever phoning home.
-3. **PKCS#11 HSM Hardware Signing:** Interfaced NestJS services with cryptographic USB hardware tokens using PKCS#11 C-bindings, generating legally compliant digital signatures for e-invoicing data pipelines.
-4. **Resilient Retry Pipelines:** Built asynchronous BullMQ/Redis worker queues with exponential backoff to handle high-throughput tax authority synchronization without data loss.
-
-#### Key Architecture Diagram
-```
-[ Air-Gapped Government Network ]
- ┌──────────────────────────────────────────────────────────────────┐
- │ [ Offline RSA License Engine ] ──► Validates Machine Fingerprint  │
- │                                                                  │
- │ [ Local Model Container ] ──► Whisper STT + BGE-M3 + Local LLM   │
- │                                                                  │
- │ [ PKCS#11 C-Bridge ] ───────► Physical Crypto Hardware Token     │
- │                               (Hardware-Signed Invoices)         │
- └──────────────────────────────────────────────────────────────────┘
-```
-
-#### Quantified Impact & Results
-- **100% Offline Autonomy:** Fully operational AI stack inside restricted government infrastructure.
-- **Zero Security Breaches:** Cryptographically validated licensing system preventing unauthorized duplication.
-- **Compliance Certification:** Successfully integrated with tax authority standards handling production-grade invoice signing.
-
----
-
-### Case Study 4: Multi-Tenant Compliance & Geospatial Field Operations
-**Product:** Y-Verify Audit & Compliance Platform  
-**Role:** Freelance Full-Stack Engineer  
-**Stack:** Next.js, TypeScript, Tailwind CSS, Supabase (PostgreSQL, Auth, Storage), Google Maps API  
-
-#### The Problem & Context
-Managing compliance audits across 500+ remote field operators resulted in operational blind spots, fraudulent location check-ins, and cumbersome paper-based reporting. The platform needed dynamic, multi-step audit forms that could adapt to changing inspection criteria and guarantee physical location integrity.
-
-#### The Technical Solution
-1. **Geospatial Fraud Prevention:** Integrated Google Maps JavaScript APIs and geofencing endpoints to validate audit coordinates against target facility boundaries in real time, preventing spoofed check-ins.
-2. **Schema-Driven Dynamic Form Engine:** Built flexible, multi-step audit form engines powered by React Hook Form and Zod schemas, supporting dynamic field validation and automated draft autosaving.
-3. **Multi-Tenant Security:** Implemented PostgreSQL Row-Level Security (RLS) policies and granular Role-Based Access Control (RBAC) ensuring strict data segregation across client organizations.
-4. **Automated Compliance Exports:** Built asynchronous background jobs generating audit PDF reports and CSV analytics directly stored on S3-compatible cloud storage.
-
-#### Quantified Impact & Results
-- **500+ Active Field Operators:** Supported daily field operations with zero reported data collisions.
-- **Fraud Reduction:** Geofencing validation eliminated off-site audit submissions.
-- **Sub-Second Autocomplete:** Streamlined operator data entry with responsive mobile-first UI.
-
----
-
-## 3. Technical Mastery / Interactive Skills Matrix
-
-Organized by engineering domains rather than arbitrary percentages:
-
-| Domain | Core Technologies & Methodologies |
-| :--- | :--- |
-| **Frontend Craftsmanship** | Next.js (App & Pages), React, TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, Redux Toolkit, WebSockets, i18n & RTL layouts |
-| **Backend & Distributed Systems**| Node.js, NestJS, Express.js, Python (FastAPI), RESTful APIs, GraphQL, Microservices, BullMQ, Redis, Background Worker Queues |
-| **Databases & Data Engineering** | PostgreSQL, Supabase, Redis, ClickHouse, Snowflake, MongoDB, Drizzle ORM, Prisma, Connection Pooling, Query Indexing |
-| **Security, Cloud & DevOps** | Docker, Docker Compose, Linux VPS Administration, Google Cloud Run, NGINX, GitHub Actions CI/CD, RSA Cryptography, PKCS#11 HSMs |
-| **AI Integration & Engineering** | LangChain, Vector Embeddings, RAG Pipelines, Local Model Inference (Whisper, BGE-M3), Semantic Caching |
-
----
-
-## 4. "About Me" & Engineering Philosophy
-
-```markdown
-I'm a Full-Stack Engineer based in Egypt with a background in Communications & Electronics Engineering. 
-
-I don't believe in the barrier between "frontend" and "backend"—the best software is built when you understand how a user click propagates through state management, down to the API gateway, into an indexed database query, and back.
-
-What I bring to a team:
-1. Product Ownership: I take features from vague requirements to shipped, production-grade code.
-2. Architecture & Performance: I don't just write code that works; I write code that scales, caches intelligently, and stays responsive under load.
-3. Asynchronous & Remote Discipline: Clear written documentation, atomic Git commits, proactive communication, and mutual respect for teammates' deep work hours.
-
-Outside of shipping products, I'm constantly dissecting distributed systems patterns, tinkering with local AI tooling, and exploring clean UI aesthetics.
+[ BullMQ Execution Queue ] ────► [ Connection Pooler ]
+                                         │
+                   ┌─────────────────────┼─────────────────────┐
+                   ▼                     ▼                     ▼
+            [ PostgreSQL ]        [ ClickHouse ]        [ Snowflake / DB2 ]
 ```
 
 ---
 
-## 5. Contact & Call to Action (Footer)
+### Case Study 2: Trseah AI Proposal Studio
+- **Role:** Lead Full-Stack Architect
+- **Product:** Saudi Government tender bidding & technical proposal generation platform
+- **Stack:** Next.js, NestJS, FastAPI, Python, LangChain, PostgreSQL, Docker
+- **Impact:** 14-day zero-to-one delivery sprint; automated RFP ingestion and Etimad API integration.
 
-- **Headline:** Ready to build something high-impact together?
-- **Subtitle:** Open to full-time remote engineering roles and select consulting projects.
-- **Profiles & Direct Reach:**
-  - Email: `amrmohamed2766@gmail.com` (Click to copy)
-  - WhatsApp: Direct chat via `https://wa.me/201021469074?text=Hi%20Amr,%20I%20reviewed%20your%20portfolio%20and%20would%20like%20to%20connect.` (Fastest response for GCC / European startup conversations)
-  - LinkedIn: `linkedin.com/in/amrmohamed27`
-  - GitHub: `github.com/AmrMohamed27`
+#### The Problem & Bottleneck
+Navigating Saudi government Etimad tenders required manual parsing of hundreds of pages of complex RFPs, tender conditions, and bill-of-quantities, creating high turnaround delays and manual bidding errors for enterprise contractors.
+
+#### The Architectural Solution
+1. **Multi-Document PDF RAG Pipeline:** Built a chunking and vector indexing engine capable of parsing Arabic/English tender documents and specifications.
+2. **Etimad API Integration:** Connected directly with Saudi government tender endpoints to ingest tender announcements in real time.
+3. **Interactive AI Proposal Studio:** Developed a Next.js interactive editor allowing bidding engineers to review, adjust, and generate formatted PDF technical proposals with one click.
+4. **Rapid Zero-to-One Sprint:** Delivered the entire production-grade platform end-to-end within a tight 14-day client milestone.
+
+#### System Architecture Schematic
+```
+[ Etimad Government API ] ──► [ Ingestion Worker ] ──► [ Multi-Doc PDF Parser ]
+                                                               │
+                                                               ▼
+[ Next.js Proposal Studio ] ◄── [ FastAPI / LangChain ] ◄── [ Vector Chunks ]
+             │
+             ▼
+[ Client Review & 1-Click PDF Export ]
+```
+
+---
+
+### Case Study 3: APEX eInvoicing Integration Platform
+- **Role:** Lead Systems Architect
+- **Product:** Enterprise ERP-to-Government tax compliance middleware
+- **Stack:** NestJS, TypeScript, PostgreSQL, Drizzle ORM, BullMQ, Redis, PKCS#11 HSM, Docker
+- **Impact:** Full Egyptian Tax Authority (ETA) compliance; zero data loss across millions in transactional volume.
+
+#### The Problem & Bottleneck
+Legacy ERP systems (SAP, Oracle, Microsoft Dynamics) lacked native mechanisms to sign, validate, and submit invoices according to strict Egyptian Tax Authority (ETA) cryptographic formatting requirements, causing submission rejections and penalty risks.
+
+#### The Architectural Solution
+1. **Hardware Cryptographic Signing:** Integrated PKCS#11 hardware security modules (HSM) and USB tokens for real-time digital document signing.
+2. **Document Canonicalization:** Implemented strict schema transformation and SHA-256 hash chaining to ensure tamper-proof invoice structures.
+3. **Idempotent Asynchronous Retry Engine:** Built a resilient BullMQ and Redis queue handling network failures and ETA rate limits with zero invoice drops.
+
+---
+
+### Case Study 4: Y-Verify Field Audit & Compliance
+- **Role:** Freelance Full-Stack Engineer
+- **Product:** AI-assisted field audit and compliance management system
+- **Stack:** Next.js, Node.js, PostgreSQL, Google Maps APIs, RBAC
+- **Scale:** 500+ distributed field operators conducting real-time site compliance audits.
+
+#### The Architectural Solution
+- Integrated Google Maps Geolocation verification to validate operator presence at audit coordinates.
+- Designed dynamic, schema-driven audit questionnaires with offline draft caching.
+- Enforced strict role-based access control (RBAC) across auditors, supervisors, and compliance directors.
+
+---
+
+## 4. Technical Capabilities Matrix
+
+```typescript
+export const technicalCapabilities = [
+  // Core Languages
+  { name: "TypeScript", category: "languages", proficiency: 95, exp: "3+ yrs", note: "Strict type safety & AST tooling" },
+  { name: "JavaScript (ESNext)", category: "languages", proficiency: 95, exp: "3+ yrs", note: "Async runtimes & event loops" },
+  { name: "Python", category: "languages", proficiency: 88, exp: "2+ yrs", note: "Data pipelines & AI integrations" },
+  { name: "SQL", category: "languages", proficiency: 92, exp: "3+ yrs", note: "Complex joins, indexing & CTEs" },
+
+  // Frameworks & Web
+  { name: "Next.js (App Router)", category: "web", proficiency: 95, exp: "3+ yrs", note: "Server components & streaming" },
+  { name: "React 19", category: "web", proficiency: 95, exp: "3+ yrs", note: "Hooks, state machines & accessible UI" },
+  { name: "NestJS", category: "web", proficiency: 92, exp: "2+ yrs", note: "Microservices & enterprise architecture" },
+  { name: "Node.js", category: "web", proficiency: 92, exp: "3+ yrs", note: "High-concurrency event-driven APIs" },
+  { name: "FastAPI", category: "web", proficiency: 88, exp: "2+ yrs", note: "Asynchronous Python REST backends" },
+  { name: "Tailwind CSS v4", category: "web", proficiency: 95, exp: "3+ yrs", note: "Modern design token architectures" },
+
+  // Databases & Storage
+  { name: "PostgreSQL", category: "data", proficiency: 92, exp: "3+ yrs", note: "Connection pooling & schema design" },
+  { name: "Redis", category: "data", proficiency: 90, exp: "3+ yrs", note: "Semantic caching & pub/sub channels" },
+  { name: "ClickHouse", category: "data", proficiency: 85, exp: "1+ yrs", note: "Analytical columnar query engine" },
+  { name: "Drizzle / Prisma ORM", category: "data", proficiency: 92, exp: "2+ yrs", note: "Type-safe database migrations" },
+
+  // Systems, AI & DevOps
+  { name: "Docker & Containers", category: "systems", proficiency: 90, exp: "2+ yrs", note: "Multi-stage builds & containerization" },
+  { name: "LangChain & RAG", category: "systems", proficiency: 90, exp: "2+ yrs", note: "Vector embeddings & context chunking" },
+  { name: "BullMQ & Queues", category: "systems", proficiency: 90, exp: "2+ yrs", note: "Reliable background job orchestration" },
+  { name: "Linux & CI/CD", category: "systems", proficiency: 88, exp: "2+ yrs", note: "GitHub Actions & automated deployments" }
+];
+```
+
+---
+
+## 5. Career & Engineering Leadership Record
+
+### Software Engineer – Core Systems @ APEX Experts AI Solutions
+*May 2025 – Present | Full-Time | Core Technical Anchor*
+- Guiding 9 engineers across flagship enterprise products (MyQuery.AI, Asklyze, APEX eInvoicing).
+- Architected air-gapped on-premise AI platform deployed to a UAE government client with offline cryptographic validation.
+- Engineered two-tier semantic caching layer cutting query latency by 77% (35s -> 8s) and LLM costs by 80%.
+- Integrated universal database introspector spanning 20+ SQL and NoSQL engines.
+
+### Freelance Full-Stack Engineer @ Y-Verify Audit & Compliance
+*July 2025 – September 2025 | Contract*
+- Built field audit web platform supporting 500+ operators with Google Maps geolocation verification and dynamic schema-driven audit flows.
+
+### Freelance Full-Stack Engineer (HoxDEX, Shahbandar Seeds, Castle Rock)
+*August 2024 – April 2025 | Global & Regional Clients*
+- Delivered high-performance web platforms, Redis caching layers, and bilingual RTL/LTR internationalization.
+
+### B.Sc. in Communications and Electronics Engineering
+*Graduated June 2024 | Alexandria University, Faculty of Engineering*
+- Strong foundational training in computing systems, signal processing, networks, algorithms, and mathematics.
