@@ -39,7 +39,7 @@
 ### Case Study 1: MyQuery.AI (Cloud & On-Premise Enterprise Edition)
 - **Role:** Core Full-Stack Architect
 - **Product:** Natural-language to multi-dialect SQL enterprise analytics platform
-- **Stack:** Next.js, TypeScript, NestJS, PostgreSQL, Redis, ClickHouse, Snowflake, Docker, GCP
+- **Stack:** Next.js, TypeScript, NestJS, Payload CMS, PostgreSQL, Redis, ClickHouse, Snowflake, Docker, GCP
 - **Scale:** 200+ active enterprise users, deployed air-gapped to UAE government entity.
 
 #### The Problem & Bottleneck
@@ -145,6 +145,7 @@ export const technicalCapabilities = [
   { name: "NestJS", category: "web", proficiency: 92, exp: "2+ yrs", note: "Microservices & enterprise architecture" },
   { name: "Node.js", category: "web", proficiency: 92, exp: "3+ yrs", note: "High-concurrency event-driven APIs" },
   { name: "FastAPI", category: "web", proficiency: 88, exp: "2+ yrs", note: "Asynchronous Python REST backends" },
+  { name: "Payload CMS", category: "web", proficiency: 92, exp: "2+ yrs", note: "Headless CMS, multi-locale dynamic copy & Postgres" },
   { name: "Tailwind CSS v4", category: "web", proficiency: 95, exp: "3+ yrs", note: "Modern design token architectures" },
 
   // Databases & Storage

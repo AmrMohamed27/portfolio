@@ -30,37 +30,34 @@ export function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 py-3 sm:py-4 transition-all duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 lg:px-8 py-3 sm:py-4 transition-all duration-300">
       <nav
         aria-label="Main Navigation"
         className={`w-full max-w-5xl flex items-center justify-between px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full border transition-all duration-300 ${
           scrolled
-            ? "bg-[rgba(11,17,30,0.85)] backdrop-blur-xl border-[var(--border-subtle)] shadow-[0_12px_32px_rgba(0,0,0,0.6)]"
-            : "bg-[rgba(11,17,30,0.65)] backdrop-blur-md border-[rgba(255,255,255,0.07)] shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+            ? "bg-surface-glass backdrop-blur-xl border-border-subtle shadow-[0_12px_32px_rgba(0,0,0,0.6)]"
+            : "bg-surface-glass/80 backdrop-blur-md border-border-subtle/40 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
         }`}
       >
         {/* Left: Brand Identity & Active Availability Beacon */}
         <Link
           href="#overview"
-          className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-cyan)] rounded-full px-2 py-1"
+          className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan rounded-full px-2 py-1"
         >
           <div className="relative flex items-center justify-center w-2.5 h-2.5">
             {siteConfig.availability.beaconActive && (
               <>
                 <span
-                  className={`absolute w-full h-full rounded-full bg-[var(--accent-emerald)] opacity-75 ${
+                  className={`absolute w-full h-full rounded-full bg-accent-emerald opacity-75 ${
                     allowAmbientPulse ? "animate-ping" : ""
                   }`}
                 />
-                <span className="relative w-2 h-2 rounded-full bg-[var(--accent-emerald)] shadow-[0_0_8px_var(--accent-emerald)]" />
+                <span className="relative w-2 h-2 rounded-full bg-accent-emerald shadow-[0_0_8px_var(--accent-emerald)]" />
               </>
             )}
           </div>
-          <span className="font-mono text-xs sm:text-sm font-semibold tracking-tight text-[var(--text-primary)] group-hover:text-[var(--accent-cyan)] transition-colors">
+          <span className="font-mono text-xs sm:text-sm font-semibold tracking-tight text-text-primary group-hover:text-accent-cyan transition-colors">
             {siteConfig.name}
-          </span>
-          <span className="hidden md:inline-block font-mono text-[10px] tracking-wider uppercase text-[var(--accent-emerald)] bg-[var(--accent-emerald-subtle)] px-2 py-0.5 rounded-full border border-[rgba(16,185,129,0.2)]">
-            Available
           </span>
         </Link>
 
@@ -70,7 +67,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="font-sans text-xs lg:text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[rgba(255,255,255,0.05)] px-3 py-1.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-cyan)]"
+              className="font-sans text-xs lg:text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover px-3 py-1.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-cyan"
             >
               {item.label}
             </Link>
@@ -86,11 +83,11 @@ export function Header() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             transition={motionTokens.microSpring}
-            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 text-xs font-semibold rounded-full bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:border-[var(--border-accent)] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-cyan)]"
+            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 text-xs font-semibold rounded-full bg-surface hover:bg-surface-hover text-text-primary border border-border-subtle hover:border-border-accent transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan"
           >
-            <FileDown className="w-3.5 h-3.5 text-[var(--accent-cyan)]" />
+            <FileDown className="w-3.5 h-3.5 text-accent-cyan" />
             <span>Resume</span>
-            <span className="hidden sm:inline font-mono text-[10px] text-[var(--text-muted)]">
+            <span className="hidden sm:inline font-mono text-[10px] text-text-muted">
               PDF
             </span>
           </motion.a>
@@ -100,9 +97,13 @@ export function Header() {
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            className="md:hidden p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-full hover:bg-[rgba(255,255,255,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-cyan)]"
+            className="md:hidden p-1.5 text-text-secondary hover:text-text-primary rounded-full hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
       </nav>
@@ -115,12 +116,14 @@ export function Header() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={motionTokens.microSpring}
-            className="md:hidden absolute top-full left-4 right-4 mt-2 p-4 rounded-2xl bg-[rgba(11,17,30,0.96)] backdrop-blur-2xl border border-[var(--border-subtle)] shadow-[0_16px_40px_rgba(0,0,0,0.7)] flex flex-col gap-2"
+            className="md:hidden absolute top-full left-4 right-4 mt-2 p-4 rounded-2xl bg-surface/95 backdrop-blur-2xl border border-border-subtle shadow-[0_16px_40px_rgba(0,0,0,0.7)] flex flex-col gap-2"
           >
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)]">
-              <span className="font-mono text-xs text-[var(--text-muted)]">Navigation</span>
-              <span className="font-mono text-[11px] text-[var(--accent-emerald)] flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-emerald)]" />
+            <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
+              <span className="font-mono text-xs text-text-muted">
+                Navigation
+              </span>
+              <span className="font-mono text-[11px] text-accent-emerald flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-emerald" />
                 {siteConfig.availability.status}
               </span>
             </div>
@@ -129,7 +132,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="font-sans text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent-cyan)] px-3 py-2 rounded-lg hover:bg-[var(--bg-surface-hover)] transition-colors"
+                className="font-sans text-sm font-medium text-text-primary hover:text-accent-cyan px-3 py-2 rounded-lg hover:bg-surface-hover transition-colors"
               >
                 {item.label}
               </Link>

@@ -36,6 +36,7 @@ export interface CaseStudy {
   role: string;
   timeline: string;
   badge?: string;
+  category?: "ai-enterprise" | "fullstack" | "ecommerce-i18n";
   summary: string;
   metrics: string[];
   problem: string[];
@@ -52,6 +53,12 @@ export interface SkillItem {
   proficiency: number;
   experience: string;
   note: string;
+  tier?: 1 | 2;
+  roleTag?: string;
+  caseStudyRef?: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface TimelineMilestone {
@@ -117,7 +124,8 @@ export const telemetryMetrics: MetricTelemetry[] = [
     value: "-77%",
     label: "Query Latency Reduction",
     description: "Slashed analytical report generation from 35s down to 8s.",
-    detail: "Implemented a two-tier semantic caching pipeline with Redis & PostgreSQL indexing, eliminating redundant database round-trips for repeated analytical queries.",
+    detail:
+      "Implemented a two-tier semantic caching pipeline with Redis & PostgreSQL indexing, eliminating redundant database round-trips for repeated analytical queries.",
     tag: "Performance Engineering",
     highlight: true,
     project: {
@@ -130,7 +138,8 @@ export const telemetryMetrics: MetricTelemetry[] = [
     value: "-80%",
     label: "LLM Token Cost Cut",
     description: "Drastically lowered API overhead through schema chunking.",
-    detail: "Replaced naive schema dump prompt injections with dynamic DDL introspection and selective table context extraction, reducing token load per prompt by 80%.",
+    detail:
+      "Replaced naive schema dump prompt injections with dynamic DDL introspection and selective table context extraction, reducing token load per prompt by 80%.",
     tag: "AI Architecture",
     highlight: true,
     project: {
@@ -142,8 +151,10 @@ export const telemetryMetrics: MetricTelemetry[] = [
     id: "connectors",
     value: "20+",
     label: "Database Engines Supported",
-    description: "Unified data access layer across diverse enterprise storage systems.",
-    detail: "Engineered a pluggable connector gateway capable of introspecting and querying SQL, ClickHouse, Snowflake, and legacy ERP data stores via a single unified API.",
+    description:
+      "Unified data access layer across diverse enterprise storage systems.",
+    detail:
+      "Engineered a pluggable connector gateway capable of introspecting and querying SQL, ClickHouse, Snowflake, and legacy ERP data stores via a single unified API.",
     tag: "Core Systems",
     highlight: false,
     project: {
@@ -155,8 +166,10 @@ export const telemetryMetrics: MetricTelemetry[] = [
     id: "speed",
     value: "14 Days",
     label: "Zero-to-One Delivery Sprint",
-    description: "Delivered production AI tender platform with Saudi Etimad integration.",
-    detail: "Owned full lifecycle from database modeling to responsive UI and reverse-engineered government procurement endpoints, taking the product from concept to active commercial demo in two weeks.",
+    description:
+      "Delivered production AI tender platform with Saudi Etimad integration.",
+    detail:
+      "Owned full lifecycle from database modeling to responsive UI and reverse-engineered government procurement endpoints, taking the product from concept to active commercial demo in two weeks.",
     tag: "Product Ownership",
     highlight: false,
     project: {
@@ -168,8 +181,10 @@ export const telemetryMetrics: MetricTelemetry[] = [
     id: "leadership",
     value: "9",
     label: "Engineers Mentored",
-    description: "Guided engineering practices and architectural standards across teams.",
-    detail: "Led code reviews, established strict TypeScript contracts and error handling conventions, and guided junior engineers on asynchronous queues and Dockerized deployments.",
+    description:
+      "Guided engineering practices and architectural standards across teams.",
+    detail:
+      "Led code reviews, established strict TypeScript contracts and error handling conventions, and guided junior engineers on asynchronous queues and Dockerized deployments.",
     tag: "Team Leadership",
     highlight: false,
     project: {
@@ -184,13 +199,13 @@ export const caseStudies: CaseStudy[] = [
     id: "myquery",
     title: "MyQuery.AI Core Platform",
     slug: "myquery-ai",
-    subtitle: "Enterprise Data Engine & Air-Gapped UAE Government AI Edition",
-    client: "APEX Experts AI Solutions (UAE Government Deployment)",
+    subtitle: "Enterprise Data Engine & Air-Gapped Government AI Edition",
+    client: "APEX Experts AI Solutions",
     role: "Core Full-Stack Architect",
     timeline: "2025 – Present",
     badge: "Air-Gapped & Enterprise",
     summary:
-      "Enterprise analytics platform translating natural language to multi-dialect SQL with live streaming dashboards, universal database introspection, and an air-gapped on-premise edition bundling local LLMs and offline cryptographic validation.",
+      "Enterprise analytics platform translating natural language to multi-dialect SQL or noSQL queries with live streaming dashboards, universal database introspection, and an air-gapped on-premise edition bundling local LLMs and offline cryptographic validation.",
     metrics: [
       "77% Query Latency Drop (35s → 8s)",
       "80% LLM Token Cost Reduction",
@@ -207,53 +222,72 @@ export const caseStudies: CaseStudy[] = [
       "Architected a two-tier Redis semantic cache where exact queries resolve in sub-10ms memory fetches and semantic vector hashes evaluate query similarity before invoking the LLM.",
       "Engineered dynamic schema introspection that injects only relevant table relations into prompts rather than whole-database DDLs, slashing token payload by 80%.",
       "Decoupled heavy query executions to BullMQ background workers with Server-Sent Events (SSE) streaming live progress to the Next.js frontend.",
+      "Integrated Payload CMS with PostgreSQL for dynamic multi-locale content governance across regional client interfaces.",
       "Packaged an air-gapped container distribution bundling local LLMs, BGE-M3 embeddings, Whisper STT, and asymmetric offline licensing.",
     ],
-    architectureDiagramAscii: `[ Next.js Client Dashboard ]
-         │ (SSE / Real-time Progress Stream)
-         ▼
-[ NestJS API Gateway ] ──────── (Cache Hit: <10ms) ────────► [ Redis Cache ]
-         │
-    (Cache Miss)
-         ▼
-[ Context-Chunking Pipeline ] ──► [ Semantic Vector Index ] ──► [ BGE-M3 / LLM ]
-         │
-         ▼
-[ BullMQ Execution Queue ] ────► [ Connection Pooler ]
-                                         │
-                   ┌─────────────────────┼─────────────────────┐
-                   ▼                     ▼                     ▼
-            [ PostgreSQL ]        [ ClickHouse ]        [ Snowflake / DB2 ]`,
+    architectureDiagramAscii: `[ Client UI ]
+       │
+       ▼
+[ NestJS API Gateway ]
+       │
+       ├─► (Cache Hit) ──► [ Redis Cache ] (Schema Chunks) ─┐
+       │                                                    │
+       └─► (Cache Miss) ─► [ Embedding Model ]              │
+                                  │                         │
+                                  ▼                         │
+                         [ Schema Chunking ] ───────────────┤
+                                                            │
+            [ AI Provider ]<────────────────────────────────┘
+                    │
+                    | Generates a query
+                    |
+                    ▼
+                    │
+                    ▼
+                  [ Connection Pooler ]
+                            │
+        ┌───────────────────┴───────────────────┐
+        ▼                                       ▼
+[Data Warehouses]                       [ Relational DBs ]
+(e.g. ClickHouse/Snowflake)          (e.g. PostgreSQL/MySQL)
+        └───────────────────┬───────────────────┘
+                            │
+                            │
+                            ▼
+           [ Query results stream to the Client]
+`,
+
     architectureFlow: [
       {
         step: "01",
-        component: "Client Interaction",
+        component: "Client UI & API",
         detail:
-          "Natural language query input streamed via Next.js with optimistic UI.",
+          "Natural language query received by NestJS API Gateway from Client UI.",
       },
       {
         step: "02",
-        component: "Two-Tier Cache",
+        component: "Cache Hit Flow",
         detail:
-          "Exact hash lookup in Redis (<10ms) followed by semantic vector similarity evaluation.",
+          "Redis immediately provides cached schema chunks directly to the AI Provider, bypassing embedding/chunking.",
       },
       {
         step: "03",
-        component: "Context Chunking",
+        component: "Cache Miss Flow",
         detail:
-          "Schema AST parser extracts only active foreign key relations into prompt payload.",
+          "Query is processed by the Embedding Model and dynamically routed through Schema Chunking to extract relevant relations.",
       },
       {
         step: "04",
-        component: "Async Worker Pool",
+        component: "AI & Execution",
         detail:
-          "BullMQ queue routes execution across 20+ dialect-specific connectors with SSE progress updates.",
+          "AI Provider synthesizes query payload; Connection Pooler orchestrates execution across target database engines.",
       },
     ],
     techStack: [
       "Next.js 16",
       "TypeScript",
       "NestJS",
+      "Payload CMS",
       "PostgreSQL",
       "Redis",
       "ClickHouse",
@@ -266,7 +300,7 @@ export const caseStudies: CaseStudy[] = [
       thumbnail: "/images/projects/screenshots/MyQuery/Hero.png",
       screenshots: ["/images/projects/screenshots/MyQuery/Hero.png"],
       video: "/videos/MyQuery.mp4",
-      logo: "/images/projects/logos/MyQuery.svg",
+      logo: "/images/projects/logos/MyQuery_Mark.svg",
     },
   },
   {
@@ -275,8 +309,8 @@ export const caseStudies: CaseStudy[] = [
     slug: "trseah-ai",
     subtitle:
       "Saudi Etimad Government Tender Ingestion & Automated Proposal Generator",
-    client: "Saudi Enterprise Contractor Ecosystem",
-    role: "Lead Full-Stack Architect",
+    client: "Saudi Enterprise Contractor",
+    role: "Full-Stack Engineer",
     timeline: "2025 (14-Day Delivery Sprint)",
     badge: "14-Day Sprint Delivery",
     summary:
@@ -297,37 +331,40 @@ export const caseStudies: CaseStudy[] = [
       "Constructed a high-productivity Next.js Proposal Studio allowing engineers to edit, refine, and compile ready-to-submit proposals with live PDF export.",
       "Delivered the complete full-stack architecture from zero to production launch in a 14-day execution cycle.",
     ],
-    architectureDiagramAscii: `[ Etimad Government API ] ──► [ Ingestion Worker ] ──► [ Multi-Doc PDF Parser ]
-                                                               │
-                                                               ▼
-[ Next.js Proposal Studio ] ◄── [ FastAPI / LangChain ] ◄── [ Vector Chunks ]
-             │
-             ▼
-[ Client Review & 1-Click PDF Export ]`,
+    architectureDiagramAscii: `[ Saudi Etimad Government Portal ]
+                 │ (Gov API / Webhooks)
+                 ▼
+[ Automated Tender Ingestion Engine ] ──► [ Arabic / English PDF Extraction ]
+                 │
+                 ▼
+[ Multi-Document Semantic Chunking ] ──► [ Vector Store & Requirement Mapping ]
+                 │
+                 ▼
+[ Proposal Studio UI (Next.js) ] ────► [ Dynamic Section Generator & PDF Export ]`,
     architectureFlow: [
       {
         step: "01",
-        component: "API Ingestion",
+        component: "Tender Ingestion",
         detail:
-          "Automated webhook and polling pipeline syncs Etimad tender notices and RFPs.",
+          "Fetches active RFPs, condition books, and BOQ documents from Saudi Etimad APIs.",
       },
       {
         step: "02",
-        component: "Multi-Doc Parser",
+        component: "Document Extraction",
         detail:
-          "Extracts Arabic/English condition books and tables of quantities into semantic vectors.",
+          "Extracts complex Arabic and English tabular criteria from tender PDFs.",
       },
       {
         step: "03",
-        component: "LangChain Studio",
+        component: "Requirement Mapping",
         detail:
-          "Generates tailored technical methodology and compliance matrices based on tender specs.",
+          "Performs semantic similarity searches to align bidder qualifications with RFP mandates.",
       },
       {
         step: "04",
-        component: "Interactive Studio",
+        component: "Proposal Studio",
         detail:
-          "Next.js rich editor gives bid managers real-time review and formatted PDF generation.",
+          "Provides an interactive WYSIWYG editor for review, refinement, and one-click PDF generation.",
       },
     ],
     techStack: [
@@ -347,7 +384,7 @@ export const caseStudies: CaseStudy[] = [
         "/images/projects/screenshots/Trseah/Proposal_Studio_preview.png",
         "/images/projects/screenshots/Trseah/Tenders_List.png",
       ],
-      logo: "/images/projects/logos/Trseah.png",
+      logo: "/images/projects/logos/Trseah_Mark.png",
     },
   },
   {
@@ -357,7 +394,7 @@ export const caseStudies: CaseStudy[] = [
     subtitle:
       "Enterprise ERP Middleware with PKCS#11 Hardware Security Module Signing",
     client: "APEX Experts & Egyptian Tax Authority (ETA) Compliance",
-    role: "Lead Systems Architect",
+    role: "Software Engineer",
     timeline: "2025",
     badge: "Government Compliant Middleware",
     summary:
@@ -427,8 +464,9 @@ export const caseStudies: CaseStudy[] = [
       "Docker",
     ],
     media: {
-      thumbnail: "/images/projects/screenshots/MyQuery/Hero.png", // Graceful fallback handled by visual architecture view
-      logo: "/images/projects/logos/APEX_Experts.svg",
+      thumbnail: "/images/projects/screenshots/eInvoicing/Hero.png",
+      screenshots: ["/images/projects/screenshots/eInvoicing/Hero.png"],
+      logo: "/images/projects/logos/APEX_Experts_Mark.svg",
     },
   },
   {
@@ -458,40 +496,37 @@ export const caseStudies: CaseStudy[] = [
       "Designed dynamic, schema-driven audit questionnaires rendered dynamically with client-side offline draft saving.",
       "Constructed a role-based dashboard for supervisors to review audit submissions, inspect geofence validations, and track compliance metrics.",
     ],
-    architectureDiagramAscii: `[ Field Operator Mobile Web ]
-            │ (Offline Draft Cache & GPS Geofence)
+    architectureDiagramAscii: `[ 500+ Field Inspectors ]
+            │ (GPS Coordinate Stamp)
             ▼
-[ Google Maps Verification API ] ──► (Coordinate Validation Check)
+[ Google Maps Geofencing Verification ] ──► [ Dynamic Form Engine ]
             │
             ▼
-[ Node.js / Express API ] ────────► [ Dynamic Schema Engine ]
-            │
-            ▼
-[ PostgreSQL Database ] ──────────► [ Supervisor Live Dashboard ]`,
+[ Offline Draft Caching ] ──────── (Network Restored) ────────► [ Supervisor Review Portal ]`,
     architectureFlow: [
       {
         step: "01",
-        component: "GPS Verification",
+        component: "Auditor Geofencing",
         detail:
-          "Browser Geolocation coordinates verified against client premises boundaries.",
+          "Validates field inspector GPS coordinates within authorized boundary before unlocking audit form.",
       },
       {
         step: "02",
-        component: "Dynamic Questionnaire",
+        component: "Dynamic Form Rendering",
         detail:
-          "Form fields rendered from JSON schemas with client-side offline storage.",
+          "Generates customizable question schemas dynamically based on inspection category.",
       },
       {
         step: "03",
-        component: "Audit Submission",
+        component: "Local Storage Caching",
         detail:
-          "Inspection evidence and media uploaded with cryptographic timestamping.",
+          "Guarantees data integrity by caching form drafts offline in remote low-coverage environments.",
       },
       {
         step: "04",
-        component: "Supervisor Review",
+        component: "Supervisor Portal",
         detail:
-          "Live dashboard with status tracking, audit approval flows, and exportable reports.",
+          "Delivers real-time compliance metrics, photo audit trails, and multi-tenant management.",
       },
     ],
     techStack: [
@@ -521,6 +556,7 @@ export const caseStudies: CaseStudy[] = [
     role: "Software Engineer – Core Systems",
     timeline: "2025",
     badge: "AI Analytics",
+    category: "ai-enterprise",
     summary:
       "Conversational BI platform enabling non-technical stakeholders to query internal databases and knowledge bases using conversational natural language with multi-modal responses.",
     metrics: [
@@ -534,6 +570,7 @@ export const caseStudies: CaseStudy[] = [
     solution: [
       "Engineered natural-language intent recognition and conversational context tracking for iterative business questions.",
       "Integrated secure read-only SQL generation with strict role-level data access constraints.",
+      "Connected Payload CMS + PostgreSQL to manage multi-locale system copy and dynamic conversational prompt templates.",
     ],
     architectureDiagramAscii: `[ Executive User Interface ] ──► [ NL Intent Recognition ] ──► [ RAG Context Engine ]
                                                                         │
@@ -543,6 +580,7 @@ export const caseStudies: CaseStudy[] = [
       "Next.js",
       "TypeScript",
       "Node.js",
+      "Payload CMS",
       "PostgreSQL",
       "Redis",
       "LangChain",
@@ -558,10 +596,11 @@ export const caseStudies: CaseStudy[] = [
     title: "Rewaa Education Management",
     slug: "rewaa",
     subtitle: "Multi-Tenant Learning Center & Booking Platform",
-    client: "Regional Educational Centers",
+    client: "Rewaa",
     role: "Full-Stack Architect",
     timeline: "2024 – 2025",
     badge: "Multi-Tenant Platform",
+    category: "fullstack",
     summary:
       "Multi-tenant learning center and course management platform with automated scheduling, transaction-safe booking, and automated zero-downtime CI/CD deployment.",
     metrics: [
@@ -592,10 +631,11 @@ export const caseStudies: CaseStudy[] = [
     slug: "shahbandar-seeds",
     subtitle:
       "High-Performance Regional Agricultural E-Commerce & Distribution Engine",
-    client: "Shahbandar Agricultural Group",
-    role: "Lead Freelance Full-Stack Engineer",
+    client: "Shahbandar Seeds",
+    role: "Freelance Front-End Engineer",
     timeline: "2024 – 2025",
     badge: "E-Commerce & i18n",
+    category: "ecommerce-i18n",
     summary:
       "Full-stack agricultural seed commerce and distribution management web platform featuring bidirectional Arabic/English internationalization, Redis caching, and fast catalog search.",
     metrics: [
@@ -611,14 +651,13 @@ export const caseStudies: CaseStudy[] = [
       "Implemented seamless RTL/LTR layout transitions and localized typography tailored for Arabic agricultural commerce.",
       "Configured automated zero-downtime CI/CD pipeline on Dockerized VPS infrastructure.",
     ],
-    architectureDiagramAscii: `[ Regional Buyers / Farmers ] ──► [ Next.js RTL/LTR Frontend ]
+    architectureDiagramAscii: `[ Regional Buyers / Farmers ] ──► [ Next.js App Router (RTL/LTR) ]
                                             │
                                             ▼
-[ Edge CDN & Redis Cache ] ◄──► [ Node.js API Service ] ──► [ PostgreSQL Database ]`,
+[ Edge CDN & Redis Cache ] ◄──► [ Next.js Server Actions / API ] ──► [ PostgreSQL Database ]`,
     techStack: [
       "Next.js",
       "TypeScript",
-      "Node.js",
       "PostgreSQL",
       "Redis",
       "Tailwind CSS",
@@ -640,6 +679,7 @@ export const caseStudies: CaseStudy[] = [
     role: "Full-Stack Software Engineer",
     timeline: "2025",
     badge: "EdTech & AI",
+    category: "ai-enterprise",
     summary:
       "Interactive mathematical reasoning platform combining AI problem-solving, LaTeX rendering, step-by-step pedagogical explanations, and PDF result exports.",
     metrics: [
@@ -672,25 +712,206 @@ export const caseStudies: CaseStudy[] = [
     media: {
       thumbnail: "/images/projects/screenshots/Helaha/Dashboard.png",
       screenshots: ["/images/projects/screenshots/Helaha/Dashboard.png"],
-      logo: "/images/projects/logos/Helaha.png",
+      logo: "/images/projects/logos/Helaha_Mark.png",
+    },
+  },
+  {
+    id: "apex-experts-website",
+    title: "APEX Experts Corporate Web Platform",
+    slug: "apex-experts-website",
+    subtitle:
+      "Modern High-Performance Corporate Web Presence & Interactive Showcase",
+    client: "APEX Experts AI Solutions",
+    role: "Frontend Engineer & Brand Architect",
+    timeline: "2025",
+    badge: "Brand Platform",
+    category: "fullstack",
+    summary:
+      "Modern brand web platform engineered for APEX Experts, delivering interactive AI solution showcases, dynamic service demonstrations, and responsive corporate positioning.",
+    metrics: [
+      "100 Lighthouse Performance & SEO",
+      "Interactive Product Demo Walkthroughs",
+      "Dynamic Fluid Typography & Dark Canvas",
+    ],
+    problem: [
+      "The firm required a modern, authoritative digital presence that effectively communicated complex AI solutions and government integrations to enterprise stakeholders.",
+    ],
+    solution: [
+      "Engineered a responsive Next.js web application with modern CSS tokens, dark obsidian aesthetics, and fluid typography.",
+      "Built interactive UI showcases highlighting APEX's suite of AI platforms with sub-second page loads.",
+      "Implemented Payload CMS with PostgreSQL for centralized multi-locale content management, enabling instant copy updates and localized marketing workflows.",
+    ],
+    architectureDiagramAscii: `[ Enterprise Client ] ──► [ Next.js Edge CDN ] ──► [ Optimized Web Vitals ]
+                                  │
+                                  ▼
+                    [ Interactive AI Showcases ]`,
+    techStack: [
+      "Next.js",
+      "TypeScript",
+      "Payload CMS",
+      "PostgreSQL",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Vercel Edge",
+    ],
+    media: {
+      thumbnail: "/images/projects/screenshots/APEX/image.png",
+      screenshots: ["/images/projects/screenshots/APEX/image.png"],
+      logo: "/images/projects/logos/APEX_Experts_Mark.svg",
+    },
+  },
+  {
+    id: "castle-rock",
+    title: "Castle Rock Luxury Furniture Store",
+    slug: "castle-rock",
+    subtitle: "High-End Bilingual E-Commerce Storefront with Custom Checkout",
+    client: "Castle Rock",
+    role: "E-Commerce Full-Stack Engineer",
+    timeline: "2024 – 2025",
+    badge: "E-Commerce & Storefront",
+    category: "ecommerce-i18n",
+    summary:
+      "Bilingual luxury furniture and home decor storefront engineered with custom Liquid templates, responsive product carousels, Arabic RTL layouts, and localized checkout flows.",
+    metrics: [
+      "Custom Shopify Liquid Components",
+      "Seamless Arabic (RTL) & English Layouts",
+      "Optimized High-Res Image Delivery",
+    ],
+    problem: [
+      "High-ticket luxury home goods required a bespoke, visually rich digital catalog with smooth RTL/LTR switching and zero layout shifts on heavy imagery.",
+    ],
+    solution: [
+      "Developed custom Liquid components with lazy-loading responsive image sets and smooth interactive hero banners.",
+      "Implemented tailored typography for Arabic luxury branding alongside a streamlined mobile-first checkout flow.",
+    ],
+    architectureDiagramAscii: `[ High-End Shopper ] ──► [ Localized RTL / LTR Storefront ]
+                                     │
+                                     ▼
+                      [ Custom Liquid / Shopify Engine ] ──► [ Secure Checkout Flow ]`,
+    techStack: [
+      "Shopify Liquid",
+      "JavaScript",
+      "HTML5 / CSS3",
+      "Tailwind CSS",
+      "Shopify Admin API",
+    ],
+    media: {
+      thumbnail: "/images/projects/screenshots/CastleRock/Site.png",
+      screenshots: ["/images/projects/screenshots/CastleRock/Site.png"],
+      logo: "/images/projects/logos/Castle_Rock_Mark.png",
     },
   },
 ];
 
+// Tier 1: 4 Flagship Architectural Case Studies (Deep Dives)
+export const flagshipCaseStudies: CaseStudy[] = caseStudies.slice(0, 4);
+
+// Tier 2: 6 Extended Engineering & Commercial Projects (Interactive Showcase Grid)
+export const selectedProjects: CaseStudy[] = caseStudies.slice(4);
+
 export const technicalCapabilities: SkillItem[] = [
-  // Languages & Core
+  // ─── TIER 1: CORE ARCHITECTURAL PILLARS (HEROES) ─────────────────────────
   {
     name: "TypeScript",
     category: "languages",
     proficiency: 95,
     experience: "3+ yrs",
-    note: "Strict type safety, generics & AST tooling",
+    tier: 1,
+    roleTag: "Primary Language",
+    note: "Strict type safety, generics, AST tooling & end-to-end full-stack contract validation",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI" },
   },
+  {
+    name: "Next.js (App Router)",
+    category: "web",
+    proficiency: 95,
+    experience: "3+ yrs",
+    tier: 1,
+    roleTag: "Flagship Framework",
+    note: "Server Components, dynamic streaming, Turbopack, middleware auth & edge runtimes",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI" },
+  },
+  {
+    name: "React 19",
+    category: "web",
+    proficiency: 95,
+    experience: "3+ yrs",
+    tier: 1,
+    roleTag: "UI Runtime",
+    note: "Concurrent features, custom hooks, micro-animations & high-performance interactive SPAs",
+    caseStudyRef: { id: "y-verify", name: "Y-Verify" },
+  },
+  {
+    name: "Python",
+    category: "languages",
+    proficiency: 88,
+    experience: "2+ yrs",
+    tier: 1,
+    roleTag: "AI & Distributed Services",
+    note: "FastAPI, Django, LangChain, autonomous agent orchestration & vector embedding pipelines",
+    caseStudyRef: { id: "trseah", name: "Trseah" },
+  },
+  {
+    name: "PostgreSQL",
+    category: "data",
+    proficiency: 92,
+    experience: "3+ yrs",
+    tier: 1,
+    roleTag: "Relational Persistence",
+    note: "Connection pooling, CTEs, schema migrations, indexing & multi-tenant isolation",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI" },
+  },
+  {
+    name: "Redis",
+    category: "data",
+    proficiency: 90,
+    experience: "3+ yrs",
+    tier: 1,
+    roleTag: "Cache & Distributed State",
+    note: "Two-tier semantic caching, pub/sub event fan-out & high-throughput rate limiting",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI" },
+  },
+  {
+    name: "Docker & Containers",
+    category: "systems",
+    proficiency: 90,
+    experience: "2+ yrs",
+    tier: 1,
+    roleTag: "Containerization Engine",
+    note: "Multi-stage builds, compose stacks, rootless isolation & air-gapped bundles",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI Air-Gapped" },
+  },
+  {
+    name: "Agentic Coding",
+    category: "systems",
+    proficiency: 96,
+    experience: "2+ yrs",
+    tier: 1,
+    roleTag: "Autonomous Workflows",
+    note: "AI agent orchestrations, automated scaffolding, AST transformations & test synthesis",
+    caseStudyRef: { id: "apex-experts-website", name: "APEX AI Systems" },
+  },
+
+  {
+    name: "Node.js",
+    category: "web",
+    proficiency: 92,
+    experience: "3+ yrs",
+    tier: 1,
+    roleTag: "Backend Runtime",
+    note: "High-concurrency REST/WebSocket/SSE backends, event loops & enterprise microservices",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI" },
+  },
+
+  // ─── TIER 2: EXTENDED PRODUCTION CAPABILITIES & ECOSYSTEM ────────────────
+  // Languages & Core
   {
     name: "JavaScript (ESNext)",
     category: "languages",
     proficiency: 95,
     experience: "3+ yrs",
+    tier: 2,
+    roleTag: "Web Runtime",
     note: "Async runtimes, event loops & Node internals",
   },
   {
@@ -698,118 +919,195 @@ export const technicalCapabilities: SkillItem[] = [
     category: "languages",
     proficiency: 92,
     experience: "3+ yrs",
+    tier: 2,
+    roleTag: "Query Language",
     note: "Complex joins, indexing, CTEs & multi-dialect SQL",
-  },
-  {
-    name: "Python",
-    category: "languages",
-    proficiency: 88,
-    experience: "2+ yrs",
-    note: "FastAPI, LangChain, data pipelines & AI tooling",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI" },
   },
 
   // Frameworks & Web
-  {
-    name: "Next.js (App Router)",
-    category: "web",
-    proficiency: 95,
-    experience: "3+ yrs",
-    note: "Server Components, streaming, Turbopack & routing",
-  },
-  {
-    name: "React 19",
-    category: "web",
-    proficiency: 95,
-    experience: "3+ yrs",
-    note: "Hooks, concurrent rendering, state machines & UI",
-  },
   {
     name: "NestJS",
     category: "web",
     proficiency: 92,
     experience: "2+ yrs",
+    tier: 2,
+    roleTag: "Modular Architecture",
     note: "Enterprise modular architectures, microservices & DI",
+    caseStudyRef: { id: "apex-einvoicing", name: "APEX eInvoicing" },
   },
   {
-    name: "Node.js",
+    name: "Django",
     category: "web",
-    proficiency: 92,
-    experience: "3+ yrs",
-    note: "High-concurrency REST/WebSocket/SSE backends",
+    proficiency: 88,
+    experience: "2+ yrs",
+    tier: 2,
+    roleTag: "Full-Stack Python",
+    note: "ORM modeling, admin architecture, REST framework & auth",
   },
   {
     name: "FastAPI",
     category: "web",
     proficiency: 88,
     experience: "2+ yrs",
+    tier: 2,
+    roleTag: "Microservices",
     note: "Async Python backends & AI agent orchestration",
+    caseStudyRef: { id: "trseah", name: "Trseah" },
+  },
+  {
+    name: "GraphQL & REST API Designs",
+    category: "web",
+    proficiency: 94,
+    experience: "3+ yrs",
+    tier: 2,
+    roleTag: "API Architecture",
+    note: "Contract-first schemas, resolvers, pagination & idempotency",
+  },
+  {
+    name: "Framer Motion",
+    category: "web",
+    proficiency: 92,
+    experience: "2+ yrs",
+    tier: 2,
+    roleTag: "Motion System",
+    note: "Spring physics, layoutId morphs & accessible choreography",
+    caseStudyRef: { id: "apex-experts-website", name: "APEX Website" },
+  },
+  {
+    name: "GSAP & Three.js",
+    category: "web",
+    proficiency: 82,
+    experience: "1 yr",
+    tier: 2,
+    roleTag: "WebGL & Canvas",
+    note: "Interactive WebGL scenes, timeline orchestration & shaders",
   },
   {
     name: "Tailwind CSS v4",
     category: "web",
     proficiency: 95,
     experience: "3+ yrs",
+    tier: 2,
+    roleTag: "Design Engineering",
     note: "Design tokens, modern CSS properties & responsive grids",
+  },
+  {
+    name: "Shopify",
+    category: "web",
+    proficiency: 90,
+    experience: "2+ yrs",
+    tier: 2,
+    roleTag: "E-Commerce Engine",
+    note: "Custom Liquid templates, Storefront API & localized checkout",
+    caseStudyRef: { id: "castle-rock", name: "Castle Rock" },
+  },
+  {
+    name: "Payload CMS",
+    category: "web",
+    proficiency: 92,
+    experience: "2+ yrs",
+    tier: 2,
+    roleTag: "Headless Content",
+    note: "Headless CMS, multi-locale dynamic copy & Postgres integration",
+    caseStudyRef: { id: "apex-experts-website", name: "APEX Site" },
   },
 
   // Databases & Storage
   {
-    name: "PostgreSQL",
+    name: "NoSQL (MongoDB & Elasticsearch)",
     category: "data",
-    proficiency: 92,
-    experience: "3+ yrs",
-    note: "Connection pooling, schema migrations & optimization",
+    proficiency: 88,
+    experience: "2+ yrs",
+    tier: 2,
+    roleTag: "Document & Search",
+    note: "Document models, aggregations, full-text index & cluster search",
   },
   {
-    name: "Redis",
+    name: "S3 Storage & Integrations",
     category: "data",
     proficiency: 90,
-    experience: "3+ yrs",
-    note: "Two-tier semantic caching, pub/sub & rate limiting",
-  },
-  {
-    name: "ClickHouse",
-    category: "data",
-    proficiency: 85,
-    experience: "1+ yrs",
-    note: "Analytical columnar storage & high-speed aggregations",
-  },
-  {
-    name: "Drizzle & Prisma ORM",
-    category: "data",
-    proficiency: 92,
     experience: "2+ yrs",
-    note: "Type-safe database queries & automated migrations",
+    tier: 2,
+    roleTag: "Object Storage",
+    note: "Multipart uploads, presigned URLs, lifecycle policies & CDN distribution",
   },
 
   // Systems, AI & DevOps
   {
-    name: "Docker & Containers",
+    name: "System Design",
     category: "systems",
-    proficiency: 90,
+    proficiency: 92,
+    experience: "3+ yrs",
+    tier: 2,
+    roleTag: "Architecture Planning",
+    note: "Distributed architectures, caching layers & high-availability failover",
+  },
+  {
+    name: "Prompt Engineering",
+    category: "systems",
+    proficiency: 94,
     experience: "2+ yrs",
-    note: "Multi-stage builds, compose stacks & air-gapped bundles",
+    tier: 2,
+    roleTag: "LLM Protocols",
+    note: "Structured output extraction, few-shot prompting & evaluation loops",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI" },
   },
   {
     name: "LangChain & RAG",
     category: "systems",
     proficiency: 90,
     experience: "2+ yrs",
+    tier: 2,
+    roleTag: "Retrieval Pipeline",
     note: "Multi-document chunking, embeddings & context pruning",
+    caseStudyRef: { id: "trseah", name: "Trseah" },
   },
   {
-    name: "BullMQ & Queues",
+    name: "VPS Deployments",
+    category: "systems",
+    proficiency: 92,
+    experience: "2+ yrs",
+    tier: 2,
+    roleTag: "Infrastructure Hosting",
+    note: "Linux hardening, Nginx/Caddy reverse proxy & systemd automation",
+  },
+  {
+    name: "GitHub Actions",
     category: "systems",
     proficiency: 90,
     experience: "2+ yrs",
-    note: "Idempotent background jobs & failure recovery",
+    tier: 2,
+    roleTag: "CI/CD Automation",
+    note: "Automated lint/test CI, container registries & continuous deployment",
   },
   {
-    name: "Linux & CI/CD",
+    name: "Git",
+    category: "systems",
+    proficiency: 95,
+    experience: "3+ yrs",
+    tier: 2,
+    roleTag: "VCS & Branching",
+    note: "Trunk-based development, rebasing, bisect & release branching",
+  },
+  {
+    name: "Google Cloud",
+    category: "systems",
+    proficiency: 85,
+    experience: "1+ yr",
+    tier: 2,
+    roleTag: "Cloud Platform",
+    note: "Cloud Run, Compute Engine, IAM roles, Cloud Storage & Artifact Registry",
+    caseStudyRef: { id: "myquery", name: "MyQuery.AI" },
+  },
+  {
+    name: "Email SMTP Servers",
     category: "systems",
     proficiency: 88,
     experience: "2+ yrs",
-    note: "GitHub Actions, automated testing & VPS operation",
+    tier: 2,
+    roleTag: "Deliverability",
+    note: "Postfix/Mailgun setup, SPF/DKIM/DMARC records & transactional delivery",
   },
 ];
 
@@ -826,16 +1124,18 @@ export const timelineMilestones: TimelineMilestone[] = [
       "Architected MyQuery.AI serving 200+ enterprise users and deployed air-gapped edition to UAE government entity with offline cryptographic licensing.",
       "Slashed query latency by 77% (35s → 8s) via two-tier semantic caching and cut LLM token costs by 80%.",
       "Engineered universal connector gateway spanning 20+ SQL/NoSQL database engines.",
+      "Integrated Payload CMS with PostgreSQL across platforms (MyQuery, Asklyze, APEX Site) for dynamic multi-locale content control.",
       "Mentored 9 junior and mid-level engineers across architecture standards and code reviews.",
     ],
     tags: [
       "Software Engineer",
       "Full-Stack",
       "AI Platforms",
+      "Payload CMS",
       "Air-Gapped",
       "Enterprise SaaS",
     ],
-    logo: "/images/projects/logos/APEX_Experts.svg",
+    logo: "/images/projects/logos/APEX_Experts_Mark.svg",
   },
   {
     period: "2025-07 – 2025-09",

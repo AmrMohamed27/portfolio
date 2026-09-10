@@ -114,22 +114,27 @@ The portfolio is structured as a **Single-Page Progressive Disclosure Hub** with
   4. **14-Day Delivery Sprint** — Zero-to-one delivery of enterprise government-integrated AI platforms.
   5. **9 Engineers Mentored** — Setting architectural standards, API contracts, and code review rituals.
 
-### 3.4. Architectural Case Studies (The Conversion Driver)
-- **UX Goal:** Demonstrate systems thinking, architectural design, trade-offs, and production engineering maturity.
-- **Structure per Case Study:**
-  - **Header:** Project Name, Target Market/Client, Role, Production Timeline.
-  - **Quantified Badges:** Key performance indicators displayed as high-contrast tags.
-  - **Problem Statement:** Real commercial or infrastructural bottleneck.
-  - **Architectural Solution:** Specific patterns utilized (e.g., BullMQ async workers, SSE streaming, two-tier cache).
-  - **Visual System Schematic:** Clean ASCII/box architecture diagram depicting the client-to-storage data pipeline.
-  - **Stack Matrix:** Precise technology pills.
+### 3.4. Architectural Case Studies & Extended Showcase (The Conversion Driver)
+- **UX Goal:** Demonstrate systems thinking, architectural design, trade-offs, and production engineering maturity without cognitive overload.
+- **Tiered Presentation Strategy:**
+  - **Tier 1: 4 Flagship Deep Dives** (`MyQuery.AI`, `Trseah AI`, `APEX eInvoicing`, `Y-Verify`):
+    - **Header:** Project Name, Client, Role, Production Timeline.
+    - **Quantified Badges:** High-contrast verified KPI tags.
+    - **Problem Statement:** Real commercial or infrastructural bottleneck.
+    - **Architectural Solution:** Specific patterns utilized (BullMQ async workers, SSE streaming, two-tier cache, air-gapped distribution, PKCS#11 HSM).
+    - **Visual System Schematic:** Interactive ASCII/box architecture diagram depicting the client-to-storage data pipeline.
+    - **Stack Matrix:** Precise technology pills.
+  - **Tier 2: Extended Engineering Showcase** (`Asklyze`, `APEX Experts Website`, `Rewaa`, `Shahbandar Seeds`, `Helaha`, `Castle Rock Store`):
+    - **Category Filters:** `All Projects`, `AI & Enterprise`, `Full-Stack Platforms`, `E-Commerce & i18n`.
+    - **Responsive Grid:** High-density card preview with project logos, screenshots, badges, and quick metrics.
+    - **Interactive Deep Dive Drawer/Modal:** 1-click modal overlay revealing problem/solution breakdown, ASCII schematic, and verified highlights.
 
 ### 3.5. Technical Capabilities Matrix
 - **UX Goal:** Prevent "wall-of-tags" fatigue with an interactive, categorized filter.
 - **Filter Categories:**
   - `All Capabilities`
   - `Languages & Core` (TypeScript, JavaScript, Python, SQL)
-  - `Frameworks & Web` (React, Next.js, Node.js, NestJS, FastAPI, Tailwind CSS)
+  - `Frameworks & Web` (React, Next.js, Node.js, NestJS, FastAPI, Tailwind CSS, Payload CMS)
   - `Data & Storage` (PostgreSQL, Redis, ClickHouse, Drizzle ORM, Prisma)
   - `Systems, AI & DevOps` (Docker, Linux, LangChain, RAG, BullMQ, Git, CI/CD)
 - **Visual Design:** Monospace metadata tags, proficiency indicators, and production experience context.

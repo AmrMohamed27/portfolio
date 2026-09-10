@@ -119,11 +119,15 @@ The typography system pairs **Plus Jakarta Sans** (a modern, distinctive geometr
 - **Styling:** `background: var(--bg-surface-elevated)`, `border: 1px solid var(--border-subtle)`, `border-radius: var(--radius-md)`.
 - **Metric Highlighting:** Primary number styled in `var(--accent-emerald)` (or `var(--accent-cyan)`), label in `var(--text-secondary)`, context footnote in `var(--text-muted)`.
 
-### 4.3. Architecture Case Study Card
-- **Layout:** Two-column split on desktop:
-  - Left column (60%): Problem context, engineering strategy, key metrics badges, stack tags.
-  - Right column (40%): Visual interactive architecture schematic (ASCII / SVG terminal block).
-- **Interactive State:** Hover elevates border from `var(--border-subtle)` to `var(--border-hover)` with a subtle cyan glow.
+### 4.3. Architecture Case Study & Project Showcase Cards
+- **Tier 1 (Flagship Deep Dives):** Two-column split on desktop:
+  - Left column (7 cols / ~58%): Problem context, engineering strategy, key metrics badges, stack tags.
+  - Right column (5 cols / ~42%): Visual interactive architecture schematic (ASCII / SVG terminal block) and preview media viewer.
+  - **Interactive State:** Hover elevates border from `var(--border-subtle)` to `var(--border-hover)` with a subtle cyan hairline glow.
+- **Tier 2 (Selected Projects Showcase):** 3-column responsive grid:
+  - Card layout: Thumbnail aspect ratio `16:10`, logo badge, headline, 2-line summary, verified impact bullet points, and tech stack tags.
+  - Interactive Filter Tabs: Animated sliding active indicator (`layoutId="projectFilterTab"`).
+  - Modal Inspection Drawer: Full problem/solution, ASCII topology, and high-res preview on demand.
 
 ### 4.4. Interactive Filterable Capabilities Matrix
 - **Category Filter Tabs:** Pill buttons with active indicator (`background: var(--accent-primary)`, `color: #ffffff`).
