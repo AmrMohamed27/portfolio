@@ -22,7 +22,7 @@ import { useAccessibleMotion } from "@/lib/use-accessible-motion";
 import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
 
 // Verified professional portrait
-const avatarUrl = "/images/headshot.png";
+const avatarUrl = "/images/headshot.webp";
 
 export function Hero() {
   const { copied, copy } = useCopyToClipboard({ timeoutMs: 2400 });
