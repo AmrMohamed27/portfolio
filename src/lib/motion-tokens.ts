@@ -71,16 +71,6 @@ export const heroChildVariant: Variants = {
   },
 };
 
-// Section header reveal
-export const sectionHeaderVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: motionTokens.revealSpring,
-  },
-};
-
 // Grid container with viewport-aware staggered reveals
 export const staggerGridContainer: Variants = {
   hidden: { opacity: 0 },
@@ -101,17 +91,4 @@ export const cardRevealVariant: Variants = {
     y: 0,
     transition: motionTokens.revealSpring,
   },
-};
-
-// Interactive card hover physics
-export const interactiveCardHover = {
-  rest: { y: 0, transition: motionTokens.microSpring },
-  hover: { y: -3, transition: motionTokens.microSpring },
-  tap: { scale: 0.99, transition: motionTokens.microSpring },
-};
-
-// Interactive button micro-springs
-export const buttonTapSpring = {
-  whileHover: { scale: 1.02, transition: motionTokens.microSpring },
-  whileTap: { scale: 0.97, transition: motionTokens.microSpring },
 };

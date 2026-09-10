@@ -65,7 +65,7 @@ export function Timeline() {
     <section
       id="experience"
       aria-labelledby="experience-heading"
-      className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 border-t border-border-muted"
+      className="w-full max-w-300 mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 border-t border-border-muted"
     >
       {/* ─── SECTION HEADER ──────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
@@ -85,8 +85,12 @@ export function Timeline() {
 
         {/* Quick KPI summary badges */}
         <div className="flex flex-wrap md:flex-col items-start md:items-end gap-2 shrink-0">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-elevated border border-border-subtle font-mono text-xs text-text-secondary">
-            <span className="w-2 h-2 rounded-full bg-accent-emerald animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface border border-border-subtle font-mono text-xs text-text-secondary">
+            <span
+              className={`w-2 h-2 rounded-full bg-accent-emerald ${
+                allowAmbientPulse ? "animate-pulse" : ""
+              } motion-reduce:animate-none`}
+            />
             <span>
               Current:{" "}
               <strong className="text-text-primary font-semibold">
@@ -94,7 +98,7 @@ export function Timeline() {
               </strong>
             </span>
           </div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-elevated border border-border-subtle font-mono text-xs text-text-secondary">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface border border-border-subtle font-mono text-xs text-text-secondary">
             <ShieldCheck className="w-3.5 h-3.5 text-accent-cyan" />
             <span>
               Mentored:{" "}
@@ -149,13 +153,13 @@ export function Timeline() {
                     {isCurrent && allowAmbientPulse && (
                       <span
                         aria-hidden="true"
-                        className="absolute -inset-1 rounded-2xl bg-accent-emerald/20 animate-ping pointer-events-none -z-10"
+                        className="absolute -inset-1 rounded-2xl bg-accent-emerald/20 animate-ping pointer-events-none -z-10 motion-reduce:hidden"
                       />
                     )}
                   </div>
 
                   {/* Milestone Content Card */}
-                  <div className="flex-1 rounded-2xl border border-border-subtle bg-surface-elevated/90 backdrop-blur-sm p-5 sm:p-7 transition-all duration-300 hover:border-border-hover hover:bg-surface-hover/80 hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+                  <div className="flex-1 rounded-2xl border border-border-subtle bg-surface/90 backdrop-blur-sm p-5 sm:p-7 transition-all duration-300 hover:border-border-hover hover:bg-surface-hover/80 hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                     {/* Card Header: Metadata, Badges & Timeframe */}
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-4 border-b border-border-muted/80">
                       <div className="flex flex-col sm:flex-row items-start gap-3.5">

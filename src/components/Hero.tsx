@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/data/portfolio-data";
@@ -20,28 +19,24 @@ import {
   motionTokens,
 } from "@/lib/motion-tokens";
 import { useAccessibleMotion } from "@/lib/use-accessible-motion";
+import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
 
 // Verified professional portrait
 const avatarUrl = "/images/headshot.png";
 
 export function Hero() {
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopyToClipboard({ timeoutMs: 2400 });
   const { prefersReduced, allowAmbientPulse } = useAccessibleMotion();
 
-  const handleCopyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(siteConfig.contact.email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2400);
-    } catch {
-      setCopied(false);
-    }
+  const handleCopyEmail = () => {
+    copy(siteConfig.contact.email);
   };
 
   return (
     <section
       id="overview"
-      className="relative pt-28 sm:pt-36 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full flex flex-col"
+      aria-labelledby="hero-heading"
+      className="relative pt-28 sm:pt-36 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-300 mx-auto w-full flex flex-col"
     >
       {/* Subtle background ambient radial lighting */}
       <div
@@ -77,13 +72,16 @@ export function Hero() {
             </div>
           </motion.div>
 
-          {/* Natural, Grounded Headline */}
+          {/* High-Impact Spec Headline */}
           <motion.h1
+            id="hero-heading"
             variants={heroChildVariant}
             className="text-2xl sm:text-4xl lg:text-[40px] font-bold tracking-tight text-text-primary leading-[1.2]"
           >
-            I build and scale products from the ground up with end-to-end
-            ownership.
+            Architecting high-throughput distributed systems &amp;{" "}
+            <span className="text-accent-cyan">
+              high-performance web platforms.
+            </span>
           </motion.h1>
 
           {/* Honest, Startup-Focused Narrative */}
@@ -121,9 +119,9 @@ export function Hero() {
             >
               <Link
                 href="#case-studies"
-                className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-white font-medium text-xs sm:text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan"
+                className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-white font-medium text-xs sm:text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan cursor-pointer"
               >
-                <span>View Projects &amp; Architecture</span>
+                <span>Explore Case Studies</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </motion.div>
@@ -150,7 +148,12 @@ export function Hero() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 transition={motionTokens.microSpring}
-                className={`inline-flex items-center gap-2 px-3.5 py-2.5 rounded-lg border font-mono text-xs transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan ${
+                aria-label={
+                  copied
+                    ? "Email address copied to clipboard"
+                    : `Copy email address ${siteConfig.contact.email}`
+                }
+                className={`inline-flex items-center gap-2 px-3.5 py-2.5 rounded-lg border font-mono text-xs transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan cursor-pointer ${
                   copied
                     ? "bg-accent-emerald-subtle border-accent-emerald text-accent-emerald"
                     : "bg-terminal hover:bg-surface border-border-subtle text-text-code hover:border-border-hover"
@@ -170,7 +173,11 @@ export function Hero() {
                 )}
               </motion.button>
 
-              {/* Micro toast confirmation */}
+              {/* Micro toast confirmation with screen reader accessibility */}
+              <div aria-live="polite" className="sr-only">
+                {copied ? "Email address copied to clipboard" : ""}
+              </div>
+
               <AnimatePresence>
                 {copied && (
                   <motion.div

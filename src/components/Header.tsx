@@ -33,7 +33,7 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 lg:px-8 py-3 sm:py-4 transition-all duration-300">
       <nav
         aria-label="Main Navigation"
-        className={`w-full max-w-5xl flex items-center justify-between px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full border transition-all duration-300 ${
+        className={`w-full max-w-300 flex items-center justify-between px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full border transition-all duration-300 ${
           scrolled
             ? "bg-surface-glass backdrop-blur-xl border-border-subtle shadow-[0_12px_32px_rgba(0,0,0,0.6)]"
             : "bg-surface-glass/80 backdrop-blur-md border-border-subtle/40 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"

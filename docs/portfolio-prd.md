@@ -97,13 +97,13 @@ The portfolio is structured as a **Single-Page Progressive Disclosure Hub** with
 ### 3.2. Command Hero (Above the Fold)
 - **UX Goal:** Instantly communicate technical depth, eliminating generic buzzwords like "Passionate Coder" in favor of crisp engineering authority.
 - **Copy Structure:**
-  - *Eyebrow Badge:* "SOFTWARE ENGINEER • FULL-STACK & CORE SYSTEMS"
+  - *Eyebrow Badge:* "Amr Mohamed • Software Engineer" with live status beacon and location pill "Alexandria, Egypt".
   - *Primary Headline:* "Architecting high-throughput distributed systems & high-performance web platforms."
   - *Supporting Narrative:* "Technical lead specializing in TypeScript, Next.js, NestJS, and PostgreSQL. Proven track record slashing query latency by 77%, engineering air-gapped AI platforms for government clients, and mentoring teams from concept to production."
   - *Action Bar:*
     - Primary CTA: `Explore Case Studies` (Smooth scroll to `#case-studies`)
     - Secondary CTA: `Download Resume` (Direct PDF access)
-    - Fast Action: `amr.mohamed.dev27@gmail.com` with 1-click clipboard copy and toast alert.
+    - Fast Action: `amrmohamed2766@gmail.com` with 1-click clipboard copy and toast alert.
 
 ### 3.3. Quantified Impact Telemetry Ticker
 - **UX Goal:** Provide hard, numerical proof of commercial and technical impact immediately below the hero fold.
@@ -130,7 +130,10 @@ The portfolio is structured as a **Single-Page Progressive Disclosure Hub** with
     - **Interactive Deep Dive Drawer/Modal:** 1-click modal overlay revealing problem/solution breakdown, ASCII schematic, and verified highlights.
 
 ### 3.5. Technical Capabilities Matrix
-- **UX Goal:** Prevent "wall-of-tags" fatigue with an interactive, categorized filter.
+- **UX Goal:** Prevent "wall-of-tags" fatigue with tiered disclosure, live search, and interactive category filtering.
+- **Architecture Structure:**
+  - **Tier 1: Core Architectural Pillars (9 Flagship Technologies):** TypeScript, Next.js, React 19, Python, PostgreSQL, Redis, Docker, Agentic Coding, Node.js.
+  - **Tier 2: Extended Ecosystem & Tooling (22+ Technologies):** Filterable via instant keyword search and domain tabs.
 - **Filter Categories:**
   - `All Capabilities`
   - `Languages & Core` (TypeScript, JavaScript, Python, SQL)
@@ -148,13 +151,12 @@ The portfolio is structured as a **Single-Page Progressive Disclosure Hub** with
   - *2024-06:* B.Sc. in Communications and Electronics Engineering (Alexandria University)
 
 ### 3.7. Conversion Dock & Footer
-- **UX Goal:** Eliminate friction for interview scheduling or direct inquiries.
+- **UX Goal:** Eliminate friction for interview scheduling or direct inquiries with multi-channel direct access.
 - **Contact Channels:**
-  - One-click copy email button with visual confirmation.
-  - WhatsApp chat link with pre-composed introduction message.
-  - LinkedIn profile link.
-  - GitHub repositories link.
-  - Local timezone clock indicator (UTC+2 Cairo / Regional Alignment).
+  - **Direct Email Card:** `amrmohamed2766@gmail.com` with 1-click copy and compose button.
+  - **Direct Phone & WhatsApp Card:** `+201281618964` with 1-click copy and instant WhatsApp chat launch (`https://wa.me/201281618964`).
+  - **Verified Professional Profiles:** LinkedIn (`https://www.linkedin.com/in/amrmohamed27`) and GitHub (`https://github.com/amrmohamed27`).
+  - **Location & Timezone Indicator:** Alexandria, Egypt (UTC+2 / UTC+3 Cairo/Gulf/Europe alignment).
 
 ---
 

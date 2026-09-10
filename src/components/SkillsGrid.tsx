@@ -67,10 +67,10 @@ const categoryColorMap: Record<
 export function SkillsGrid() {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const { prefersReduced, hoverLift } = useAccessibleMotion();
+  const { prefersReduced, hoverLift, allowAmbientPulse } = useAccessibleMotion();
   const tabListId = useId();
 
-  // Tier 1: Core Architectural Pillars (Top 8 flagship technologies)
+  // Tier 1: Core Architectural Pillars (9 flagship technologies)
   const tierOnePillars = useMemo(
     () => technicalCapabilities.filter((s) => s.tier === 1),
     []
@@ -107,7 +107,7 @@ export function SkillsGrid() {
     <section
       id="skills"
       aria-labelledby="skills-heading"
-      className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 border-t border-border-muted"
+      className="w-full max-w-300 mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 border-t border-border-muted"
     >
       {/* ─── SECTION HEADER ──────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
@@ -127,7 +127,7 @@ export function SkillsGrid() {
 
         {/* Global Summary Badge */}
         <div className="hidden lg:flex flex-col items-end gap-1.5 shrink-0">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-elevated border border-border-subtle font-mono text-xs text-text-secondary">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface border border-border-subtle font-mono text-xs text-text-secondary">
             <CheckCircle2 className="w-3.5 h-3.5 text-accent-emerald" />
             <span>
               <strong className="text-text-primary font-semibold">
@@ -147,7 +147,11 @@ export function SkillsGrid() {
       <div className="mb-16 sm:mb-20">
         <div className="flex items-center justify-between mb-6 pb-3 border-b border-border-muted/70">
           <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-accent-cyan animate-pulse" />
+            <span
+              className={`flex h-2 w-2 rounded-full bg-accent-cyan ${
+                allowAmbientPulse ? "animate-pulse" : ""
+              } motion-reduce:animate-none`}
+            />
             <h3 className="font-mono text-xs sm:text-sm font-semibold tracking-wider uppercase text-text-primary">
               Tier 1: Core Architectural Pillars
             </h3>
@@ -199,7 +203,7 @@ export function SkillsGrid() {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search 22+ tools..."
               aria-label="Search technologies"
-              className="w-full pl-8 pr-8 py-1.5 rounded-lg bg-surface-elevated/90 border border-border-subtle focus:border-accent-cyan focus:ring-1 focus:ring-accent-cyan text-xs text-text-primary placeholder:text-text-muted outline-none transition-all font-mono"
+              className="w-full pl-8 pr-8 py-1.5 rounded-lg bg-surface/90 border border-border-subtle focus:border-accent-cyan focus:ring-1 focus:ring-accent-cyan text-xs text-text-primary placeholder:text-text-muted outline-none transition-all font-mono"
             />
             {searchQuery && (
               <button
@@ -219,7 +223,7 @@ export function SkillsGrid() {
           <div
             role="tablist"
             aria-label="Filter ecosystem by engineering domain"
-            className="flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-xl sm:rounded-full bg-surface-elevated/90 border border-border-subtle backdrop-blur-md mb-8 overflow-x-auto no-scrollbar"
+            className="flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-xl sm:rounded-full bg-surface/90 border border-border-subtle backdrop-blur-md mb-8 overflow-x-auto no-scrollbar"
           >
             {CATEGORY_TABS.map((tab) => {
               const isActive = activeCategory === tab.id;
@@ -330,7 +334,7 @@ function TierOneCard({ pillar, hoverLift, prefersReduced }: TierOneCardProps) {
       transition={
         prefersReduced ? { duration: 0.01 } : motionTokens.microSpring
       }
-      className="group relative flex flex-col justify-between p-5 rounded-xl bg-surface-elevated/80 border border-border-subtle hover:border-accent-cyan/40 hover:bg-surface-hover/90 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.25)] overflow-hidden"
+      className="group relative flex flex-col justify-between p-5 rounded-xl bg-surface/80 border border-border-subtle hover:border-accent-cyan/40 hover:bg-surface-hover/90 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.25)] overflow-hidden"
     >
       {/* Top ambient color edge accent */}
       <div
@@ -412,7 +416,7 @@ function TierTwoPillCard({
       transition={
         prefersReduced ? { duration: 0.01 } : motionTokens.microSpring
       }
-      className="group relative flex flex-col justify-between p-3.5 rounded-lg bg-surface-elevated/50 border border-border-subtle hover:border-border-hover hover:bg-surface-hover/70 transition-all shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
+      className="group relative flex flex-col justify-between p-3.5 rounded-lg bg-surface/50 border border-border-subtle hover:border-border-hover hover:bg-surface-hover/70 transition-all shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
     >
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <div className="flex items-center gap-2">

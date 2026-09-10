@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { telemetryMetrics, MetricTelemetry } from "@/data/portfolio-data";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Zap,
   TrendingDown,
@@ -31,7 +31,7 @@ const metricIconMap: Record<
 };
 
 export function MetricsTicker() {
-  const { prefersReduced, hoverLift } = useAccessibleMotion();
+  const { prefersReduced, hoverLift, allowAmbientPulse } = useAccessibleMotion();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const toggleExpand = (id: string) => {
@@ -43,17 +43,22 @@ export function MetricsTicker() {
 
   return (
     <section
-      aria-label="Engineering Impact Telemetry"
-      className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-y border-border-muted bg-canvas/70 backdrop-blur-sm"
+      aria-labelledby="telemetry-heading"
+      className="w-full max-w-300 mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-y border-border-muted bg-canvas/70 backdrop-blur-sm"
     >
       {/* Section Header with verified telemetry context */}
       <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-cyan opacity-75" />
+            {allowAmbientPulse && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-cyan opacity-75 motion-reduce:hidden" />
+            )}
             <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-cyan" />
           </span>
-          <h2 className="font-mono text-xs font-semibold tracking-wider uppercase text-accent-cyan">
+          <h2
+            id="telemetry-heading"
+            className="font-mono text-xs font-semibold tracking-wider uppercase text-accent-cyan"
+          >
             Verified Production Telemetry &amp; Impact
           </h2>
         </div>
@@ -69,7 +74,7 @@ export function MetricsTicker() {
         viewport={{ once: true, margin: "-50px" }}
         className="flex flex-col gap-3.5 sm:gap-4"
       >
-        {/* ROW 1: Flagship Impact Cards (2-column layout) */}
+        {/* Tier 1 Primary Flagship Metrics (2 Columns on tablet/desktop) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
           {primaryMetrics.map((metric) => (
             <MetricCard
@@ -78,13 +83,14 @@ export function MetricsTicker() {
               isExpanded={expandedId === metric.id}
               onToggle={() => toggleExpand(metric.id)}
               hoverLift={hoverLift}
+              prefersReduced={prefersReduced}
               isFlagship
             />
           ))}
         </div>
 
-        {/* ROW 2: Supporting Systems & Velocity Metrics (3-column layout) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4">
+        {/* Tier 2 Secondary Supporting Metrics (3 Columns on desktop) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
           {secondaryMetrics.map((metric) => (
             <MetricCard
               key={metric.id}
@@ -92,6 +98,7 @@ export function MetricsTicker() {
               isExpanded={expandedId === metric.id}
               onToggle={() => toggleExpand(metric.id)}
               hoverLift={hoverLift}
+              prefersReduced={prefersReduced}
             />
           ))}
         </div>
@@ -105,6 +112,7 @@ interface MetricCardProps {
   isExpanded: boolean;
   onToggle: () => void;
   hoverLift: number;
+  prefersReduced: boolean;
   isFlagship?: boolean;
 }
 
@@ -113,6 +121,7 @@ function MetricCard({
   isExpanded,
   onToggle,
   hoverLift,
+  prefersReduced,
   isFlagship = false,
 }: MetricCardProps) {
   const IconComponent = metricIconMap[metric.id] || Zap;
@@ -165,17 +174,17 @@ function MetricCard({
           <div
             className={`p-1.5 rounded-lg transition-colors ${
               isFlagship
-                ? "text-accent-cyan bg-accent-cyan-subtle"
-                : "text-text-muted group-hover:text-text-primary bg-surface"
+                ? "bg-accent-cyan-subtle text-accent-cyan"
+                : "bg-surface text-text-secondary group-hover:text-accent-cyan"
             }`}
           >
-            <IconComponent className="w-3.5 h-3.5" />
+            <IconComponent className="w-4 h-4" />
           </div>
 
           <motion.div
             animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={motionTokens.microSpring}
-            className="p-1 text-text-muted group-hover:text-accent-cyan"
+            className="text-text-muted group-hover:text-text-primary p-1"
           >
             <ChevronDown className="w-3.5 h-3.5" />
           </motion.div>
@@ -186,7 +195,7 @@ function MetricCard({
       <div className="mb-2">
         <div className="flex flex-col gap-0.5">
           <span
-            className={`font-mono font-extrabold tracking-tight whitespace-nowrap leading-none ${
+            className={`font-mono font-extrabold tracking-tight whitespace-nowrap leading-none tabular-nums ${
               isFlagship
                 ? "text-3xl sm:text-4xl text-text-primary"
                 : "text-2xl sm:text-[28px] text-text-primary"
@@ -205,15 +214,20 @@ function MetricCard({
         {metric.description}
       </p>
 
-      {/* Expandable Architectural Evidence Detail */}
-      <AnimatePresence initial={false}>
-        {isExpanded && metric.detail && (
+      {/* Expandable Architectural Evidence Detail (GPU-only compositor animation via CSS Grid) */}
+      <div
+        className={`grid transition-[grid-template-rows] duration-200 ease-out ${
+          isExpanded && metric.detail ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={motionTokens.microSpring}
-            className="overflow-hidden"
+            initial={false}
+            animate={{
+              opacity: isExpanded ? 1 : 0,
+              y: prefersReduced ? 0 : isExpanded ? 0 : -6,
+            }}
+            transition={motionTokens.snappy}
           >
             <div className="mt-3 pt-3 border-t border-border-subtle text-xs text-text-secondary bg-terminal/70 rounded-lg p-3">
               <div className="flex items-center justify-between mb-1.5">
@@ -226,8 +240,8 @@ function MetricCard({
               </p>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      </div>
 
       {/* Bottom Hint */}
       {!isExpanded && metric.detail && (

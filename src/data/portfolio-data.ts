@@ -1177,7 +1177,7 @@ export const timelineMilestones: TimelineMilestone[] = [
   },
   {
     period: "2024-06",
-    title: "B.Sc. in Communications & Electronics Engineering",
+    title: "B.Eng. in Communications & Electronics Engineering",
     company: "Alexandria University, Faculty of Engineering",
     location: "Alexandria, Egypt",
     type: "Academic Milestone",

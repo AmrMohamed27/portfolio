@@ -1,8 +1,8 @@
 # Portfolio Content & System Architecture Blueprints
 ## Professional Narrative & Verifiable Case Studies
 **Persona:** Amr Mohamed — Full-Stack & Core Systems Software Engineer  
-**Contact:** `amr.mohamed.dev27@gmail.com` | WhatsApp: `+201026046755` | [LinkedIn](https://linkedin.com/in/amr-mohamed-07615024b) | [GitHub](https://github.com/amr-mohamed27)  
-**Location / Availability:** Cairo / Remote Global & Gulf (UTC+2 / UTC+3) — Immediate Availability
+**Contact:** `amrmohamed2766@gmail.com` | Phone: `+201281618964` | WhatsApp: [WhatsApp](https://wa.me/201281618964) | [LinkedIn](https://www.linkedin.com/in/amrmohamed27) | [GitHub](https://github.com/amrmohamed27)  
+**Location / Availability:** Alexandria, Egypt / Remote Global & Gulf (UTC+2 / UTC+3) — Immediate Availability
 
 ---
 
