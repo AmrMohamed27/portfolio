@@ -12,14 +12,13 @@ import {
   ArrowUpRight,
   CheckCircle2,
   Code2,
-  Cpu,
   Database,
   Globe,
   Layers,
   Search,
   Sparkles,
   Terminal,
-  X,
+  X
 } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 
@@ -113,10 +112,6 @@ export function SkillsGrid() {
       {/* ─── SECTION HEADER ──────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-xs font-mono mb-3">
-            <Cpu className="w-3.5 h-3.5" />
-            <span>Operational Stack & Capabilities</span>
-          </div>
           <h2
             id="skills-heading"
             className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary mb-3"

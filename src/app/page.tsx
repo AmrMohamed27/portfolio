@@ -3,6 +3,8 @@ import { Hero } from "@/components/Hero";
 import { MetricsTicker } from "@/components/MetricsTicker";
 import { CaseStudies } from "@/components/CaseStudies";
 import { SkillsGrid } from "@/components/SkillsGrid";
+import { Timeline } from "@/components/Timeline";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -22,7 +24,13 @@ export default function Home() {
 
         {/* Interactive Capabilities Matrix [PORT-302] */}
         <SkillsGrid />
+
+        {/* Career & Leadership Timeline [PORT-401] */}
+        <Timeline />
       </main>
+
+      {/* High-Conversion Contact Dock & Terminal Footer [PORT-402] */}
+      <Footer />
     </div>
   );
 }

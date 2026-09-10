@@ -112,8 +112,8 @@ export const siteConfig: SiteConfig = {
     phone: "+201281618964",
     whatsappUrl:
       "https://wa.me/201281618964?text=Hi%20Amr%2C%20I%20reviewed%20your%20portfolio%20and%20would%20like%20to%20connect%21",
-    linkedinUrl: "https://www.linkedin.com/in/amr-mohamed-07615024b",
-    githubUrl: "https://github.com/amr-mohamed27",
+    linkedinUrl: "https://www.linkedin.com/in/amrmohamed27",
+    githubUrl: "https://github.com/amrmohamed27",
     resumePdfUrl: "/resume.pdf",
   },
 };
@@ -1139,7 +1139,7 @@ export const timelineMilestones: TimelineMilestone[] = [
   },
   {
     period: "2025-07 – 2025-09",
-    title: "Freelance Full-Stack Engineer",
+    title: "Full-Stack Engineer",
     company: "Y-Verify Audit & Compliance",
     location: "Remote",
     type: "Contract / Freelance",
@@ -1150,7 +1150,14 @@ export const timelineMilestones: TimelineMilestone[] = [
       "Designed dynamic schema-driven audit flows with offline-first client draft caching.",
       "Built multi-tenant role-based access control (RBAC) across inspectors and supervisors.",
     ],
-    tags: ["Freelance", "Next.js", "Compliance", "Google Maps", "Audit"],
+    tags: [
+      "Contract",
+      "Part-Time",
+      "Next.js",
+      "Compliance",
+      "Google Maps",
+      "Audit",
+    ],
     logo: "/images/projects/logos/Y-Verify.png",
   },
   {
@@ -1160,14 +1167,13 @@ export const timelineMilestones: TimelineMilestone[] = [
     location: "Remote",
     type: "Contract / Freelance",
     description:
-      "Architected, built, and deployed full-stack web platforms and e-commerce solutions for global and regional clients (HoxDEX, Shahbandar Seeds, Castle Rock).",
+      "Architected, built, and deployed full-stack web platforms and e-commerce solutions for global and regional clients (Shahbandar Seeds, Castle Rock, Rewaa, Helaha).",
     impacts: [
       "Delivered high-performance Next.js web applications with Redis caching layers.",
       "Engineered comprehensive internationalization (i18n) with bidirectional RTL/LTR support.",
       "Configured automated zero-downtime CI/CD pipelines on Dockerized VPS infrastructure.",
     ],
     tags: ["Next.js", "Redis", "i18n RTL/LTR", "Full-Stack", "PostgreSQL"],
-    logo: "/images/projects/logos/Shahbandar.png",
   },
   {
     period: "2024-06",
