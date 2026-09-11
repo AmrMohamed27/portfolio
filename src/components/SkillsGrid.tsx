@@ -7,7 +7,7 @@ import {
   staggerGridContainer,
 } from "@/lib/motion-tokens";
 import { useAccessibleMotion } from "@/lib/use-accessible-motion";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
   CheckCircle2,
@@ -20,7 +20,8 @@ import {
   Terminal,
   X
 } from "lucide-react";
-import { useId, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { TabSelector } from "@/components/TabSelector";
 
 type CategoryFilter = "all" | "languages" | "web" | "data" | "systems";
 
@@ -67,8 +68,8 @@ const categoryColorMap: Record<
 export function SkillsGrid() {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isEcosystemExpanded, setIsEcosystemExpanded] = useState(false);
   const { prefersReduced, hoverLift, allowAmbientPulse } = useAccessibleMotion();
-  const tabListId = useId();
 
   // Tier 1: Core Architectural Pillars (9 flagship technologies)
   const tierOnePillars = useMemo(
@@ -194,120 +195,105 @@ export function SkillsGrid() {
             </p>
           </div>
 
-          {/* Instant Search Bar */}
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search 22+ tools..."
-              aria-label="Search technologies"
-              className="w-full pl-8 pr-8 py-1.5 rounded-lg bg-surface/90 border border-border-subtle focus:border-accent-cyan focus:ring-1 focus:ring-accent-cyan text-xs text-text-primary placeholder:text-text-muted outline-none transition-all font-mono"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                aria-label="Clear search"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary p-0.5 rounded"
-              >
-                <X className="w-3 h-3" />
-              </button>
+          {/* Instant Search Bar & Toggle */}
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => setIsEcosystemExpanded((prev) => !prev)}
+              aria-expanded={isEcosystemExpanded}
+              className="px-3 py-1.5 rounded-lg text-xs font-mono font-medium border border-border-subtle bg-surface hover:bg-surface-hover text-text-primary transition-colors cursor-pointer shrink-0"
+            >
+              {isEcosystemExpanded
+                ? "Collapse Ecosystem"
+                : `Explore All Tools (${tierTwoEcosystem.length})`}
+            </button>
+
+            {isEcosystemExpanded && (
+              <div className="relative w-full sm:w-56">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search tools..."
+                  aria-label="Search technologies"
+                  className="w-full pl-8 pr-8 py-1.5 rounded-lg bg-surface/90 border border-border-subtle focus:border-accent-cyan focus:ring-1 focus:ring-accent-cyan text-xs text-text-primary placeholder:text-text-muted outline-none transition-all font-mono"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Clear search"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary p-0.5 rounded"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
 
-        {/* Interactive Category Filter Tabs */}
-        <LayoutGroup id={tabListId}>
-          <div
-            role="tablist"
-            aria-label="Filter ecosystem by engineering domain"
-            className="flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-xl sm:rounded-full bg-surface/90 border border-border-subtle backdrop-blur-md mb-8 overflow-x-auto no-scrollbar"
-          >
-            {CATEGORY_TABS.map((tab) => {
-              const isActive = activeCategory === tab.id;
-              const Icon = tab.icon;
-              const count = getCategoryCount(tab.id);
+        {isEcosystemExpanded ? (
+          <>
+            {/* Interactive Category Filter Tabs */}
+            <div className="mb-8">
+              <TabSelector
+                tabs={CATEGORY_TABS.map((tab) => ({
+                  id: tab.id,
+                  label: tab.label,
+                  icon: tab.icon,
+                  count: getCategoryCount(tab.id),
+                  dot: false,
+                }))}
+                activeTab={activeCategory}
+                onTabChange={(id) => setActiveCategory(id as CategoryFilter)}
+                layoutId="activeSkillTab"
+                ariaLabel="Filter ecosystem by engineering domain"
+                size="sm"
+              />
+            </div>
 
-              return (
-                <button
-                  key={tab.id}
-                  role="tab"
-                  id={`tab-${tab.id}`}
-                  aria-selected={isActive}
-                  aria-controls={`panel-${tab.id}`}
-                  tabIndex={isActive ? 0 : -1}
-                  onClick={() => setActiveCategory(tab.id)}
-                  className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-lg sm:rounded-full text-xs font-medium transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan shrink-0 ${
-                    isActive
-                      ? "text-text-primary font-semibold"
-                      : "text-text-secondary hover:text-text-primary hover:bg-surface-hover/60"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeSkillTab"
-                      transition={
-                        prefersReduced
-                          ? { duration: 0.01 }
-                          : motionTokens.microSpring
-                      }
-                      className="absolute inset-0 bg-surface-hover border border-accent-cyan/30 rounded-lg sm:rounded-full shadow-[0_2px_12px_rgba(56,189,248,0.15)]"
+            {/* Tier 2 Dense Capabilities Matrix */}
+            <div
+              role="tabpanel"
+              id={`panel-${activeCategory}`}
+              aria-labelledby={`tab-${activeCategory}`}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+            >
+              <AnimatePresence mode="popLayout" initial={false}>
+                {filteredEcosystem.length > 0 ? (
+                  filteredEcosystem.map((skill) => (
+                    <TierTwoPillCard
+                      key={skill.name}
+                      skill={skill}
+                      hoverLift={hoverLift}
+                      prefersReduced={prefersReduced}
                     />
-                  )}
-
-                  <span className="relative z-10 flex items-center gap-1.5">
-                    <Icon
-                      className={`w-3.5 h-3.5 ${
-                        isActive ? "text-accent-cyan" : "text-text-muted"
-                      }`}
-                    />
-                    <span>{tab.label}</span>
-                    <span
-                      className={`font-mono text-[10px] px-1.5 py-0.2 rounded-full ${
-                        isActive
-                          ? "bg-accent-cyan-subtle text-accent-cyan border border-accent-cyan/20"
-                          : "bg-surface border border-border-subtle text-text-muted"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
+                  ))
+                ) : (
+                  <div className="col-span-full py-12 text-center text-text-muted text-xs font-mono">
+                    No matching technologies found for &ldquo;{searchQuery}&rdquo;.
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
+          </>
+        ) : (
+          <div className="p-4 rounded-xl border border-dashed border-border-subtle bg-surface/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-text-muted">
+            <span>
+              22+ complementary tools, message brokers, cloud engines &amp; CI/CD
+              pipelines available for inspection.
+            </span>
+            <button
+              type="button"
+              onClick={() => setIsEcosystemExpanded(true)}
+              className="text-accent-cyan hover:underline font-semibold cursor-pointer shrink-0"
+            >
+              Show all ecosystem tools →
+            </button>
           </div>
-        </LayoutGroup>
-
-        {/* Tier 2 Dense Capabilities Matrix */}
-        <motion.div
-          role="tabpanel"
-          id={`panel-${activeCategory}`}
-          aria-labelledby={`tab-${activeCategory}`}
-          variants={prefersReduced ? undefined : staggerGridContainer}
-          initial="hidden"
-          animate="visible"
-          key={`${activeCategory}-${searchQuery}`}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredEcosystem.length > 0 ? (
-              filteredEcosystem.map((skill) => (
-                <TierTwoPillCard
-                  key={skill.name}
-                  skill={skill}
-                  hoverLift={hoverLift}
-                  prefersReduced={prefersReduced}
-                />
-              ))
-            ) : (
-              <div className="col-span-full py-12 text-center text-text-muted text-xs font-mono">
-                No matching technologies found for &ldquo;{searchQuery}&rdquo;.
-              </div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+        )}
       </div>
     </section>
   );
@@ -410,13 +396,22 @@ function TierTwoPillCard({
 
   return (
     <motion.div
-      layout
-      variants={cardRevealVariant}
-      whileHover={{ y: hoverLift }}
+      layout="position"
+      initial={prefersReduced ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+      whileHover={prefersReduced ? undefined : { y: hoverLift }}
       transition={
-        prefersReduced ? { duration: 0.01 } : motionTokens.microSpring
+        prefersReduced
+          ? { duration: 0.01 }
+          : {
+              opacity: { duration: 0.2 },
+              scale: { duration: 0.2 },
+              layout: motionTokens.revealSpring,
+              y: motionTokens.microSpring,
+            }
       }
-      className="group relative flex flex-col justify-between p-3.5 rounded-lg bg-surface/50 border border-border-subtle hover:border-border-hover hover:bg-surface-hover/70 transition-all shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
+      className="group relative flex flex-col justify-between p-3.5 rounded-lg bg-surface/50 border border-border-subtle hover:border-border-hover hover:bg-surface-hover/70 transition-colors duration-200 shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
     >
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <div className="flex items-center gap-2">

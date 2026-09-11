@@ -1,12 +1,14 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useSyncExternalStore } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motionTokens } from '@/lib/motion-tokens';
 import { useAccessibleMotion } from '@/lib/use-accessible-motion';
 import { useModalAccessibility } from '@/lib/use-modal-accessibility';
+
+const emptySubscribe = () => () => {};
 
 export interface FullscreenLightboxProps {
   isOpen: boolean;
@@ -15,6 +17,7 @@ export interface FullscreenLightboxProps {
   images: string[];
   activeIndex?: number;
   onIndexChange?: (index: number) => void;
+  video?: string;
 }
 
 export function FullscreenLightbox({
@@ -24,7 +27,9 @@ export function FullscreenLightbox({
   images,
   activeIndex = 0,
   onIndexChange,
+  video,
 }: FullscreenLightboxProps) {
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const containerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const { prefersReduced } = useAccessibleMotion();
@@ -58,14 +63,21 @@ export function FullscreenLightbox({
     return () => window.removeEventListener('keydown', handleArrowKeys);
   }, [isOpen, images.length, activeIndex, onIndexChange]);
 
+  const hasVideo = Boolean(video);
   const currentImage = images[activeIndex] || images[0];
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
-      {isOpen && currentImage && (
-        <div
+      {isOpen && (currentImage || hasVideo) && (
+        <motion.div
           ref={containerRef}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-8 backdrop-blur-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 p-4 sm:p-8 backdrop-blur-md"
           role="dialog"
           aria-modal="true"
           aria-label={`${title} Fullscreen Screenshot`}
@@ -79,13 +91,13 @@ export function FullscreenLightbox({
 
           <motion.div
             initial={
-              prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }
+              prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.96 }
             }
             animate={{ opacity: 1, scale: 1 }}
             exit={
-              prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }
+              prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.96 }
             }
-            transition={motionTokens.toastSpring}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
             className="relative max-w-6xl w-full max-h-[90vh] flex flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
@@ -93,7 +105,7 @@ export function FullscreenLightbox({
             <div className="w-full flex items-center justify-between pb-3 text-white">
               <span className="font-mono text-xs sm:text-sm text-text-secondary truncate pr-4">
                 {title}
-                {images.length > 1 && (
+                {!hasVideo && images.length > 1 && (
                   <span className="text-text-muted ml-2">
                     ({activeIndex + 1} of {images.length})
                   </span>
@@ -109,15 +121,29 @@ export function FullscreenLightbox({
               </button>
             </div>
 
-            {/* Fullscreen Image Container */}
+            {/* Fullscreen Media Container (Video or Image) */}
             <div className="relative w-full aspect-video sm:aspect-16/10 max-h-[75vh] rounded-xl overflow-hidden border border-border-muted bg-terminal shadow-2xl flex items-center justify-center">
-              <Image
-                src={currentImage}
-                alt={`${title} Fullscreen View`}
-                fill
-                className="object-contain"
-                priority
-              />
+              {hasVideo ? (
+                <video
+                  src={video}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="w-full h-full object-contain bg-black"
+                >
+                  Your browser does not support video playback.
+                </video>
+              ) : (
+                currentImage && (
+                  <Image
+                    src={currentImage}
+                    alt={`${title} Fullscreen View`}
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                )
+              )}
 
               {/* Prev/Next arrows on screen if multi-image */}
               {images.length > 1 && (
@@ -166,8 +192,9 @@ export function FullscreenLightbox({
               </div>
             )}
           </motion.div>
-        </div>
+        </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

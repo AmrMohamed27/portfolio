@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/data/portfolio-data";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import {
   ArrowRight,
   FileDown,
@@ -27,6 +27,33 @@ const avatarUrl = "/images/headshot.webp";
 export function Hero() {
   const { copied, copy } = useCopyToClipboard({ timeoutMs: 2400 });
   const { prefersReduced, allowAmbientPulse } = useAccessibleMotion();
+
+  // 3D perspective tilt motion values
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [7, -7]), {
+    stiffness: 300,
+    damping: 25,
+  });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-7, 7]), {
+    stiffness: 300,
+    damping: 25,
+  });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReduced) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   const handleCopyEmail = () => {
     copy(siteConfig.contact.email);
@@ -199,8 +226,14 @@ export function Hero() {
         <motion.div
           variants={heroChildVariant}
           className="lg:col-span-5 flex justify-center lg:justify-end"
+          style={{ perspective: 1000 }}
         >
-          <div className="relative w-full max-w-[320px] sm:max-w-85 rounded-2xl border border-border-subtle bg-surface shadow-[0_16px_36px_rgba(0,0,0,0.55)] p-2.5 flex flex-col gap-3 group">
+          <motion.div
+            style={prefersReduced ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className="relative w-full max-w-[320px] sm:max-w-85 rounded-2xl border border-border-subtle bg-surface shadow-[0_16px_36px_rgba(0,0,0,0.55)] p-2.5 flex flex-col gap-3 group transition-shadow duration-300 hover:shadow-[0_20px_45px_rgba(56,189,248,0.12)] cursor-default"
+          >
             {/* The Photo Container with crisp aspect ratio */}
             <div className="relative w-full aspect-4/4.5 rounded-xl overflow-hidden bg-terminal border border-border-subtle/50">
               <Image
@@ -250,7 +283,7 @@ export function Hero() {
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>

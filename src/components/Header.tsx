@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { siteConfig } from "@/data/portfolio-data";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,16 +18,57 @@ const navItems = [
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("#overview");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { allowAmbientPulse } = useAccessibleMotion();
+  const { allowAmbientPulse, prefersReduced } = useAccessibleMotion();
+  const isClickScrollingRef = useRef(false);
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 24);
+
+      // If user recently clicked a nav link, preserve that active section during the smooth scroll
+      if (isClickScrollingRef.current) return;
+
+      // Bottom-of-page detection: when user reaches the end of the page, automatically highlight #contact
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      const currentScroll = window.scrollY;
+      if (currentScroll + clientHeight >= scrollHeight - 60) {
+        setActiveSection("#contact");
+        return;
+      }
+
+      // Scroll-spy active section detection
+      const sectionIds = navItems.map((item) => item.href.substring(1));
+      const scrollPosition = window.scrollY + 200;
+
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sectionIds[i]);
+        if (section && section.offsetTop <= scrollPosition) {
+          setActiveSection(`#${sectionIds[i]}`);
+          break;
+        }
+      }
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    };
   }, []);
+
+  const handleNavClick = (href: string) => {
+    setActiveSection(href);
+    isClickScrollingRef.current = true;
+    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    clickTimeoutRef.current = setTimeout(() => {
+      isClickScrollingRef.current = false;
+    }, 850);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 lg:px-8 py-3 sm:py-4 transition-all duration-300">
@@ -42,6 +83,7 @@ export function Header() {
         {/* Left: Brand Identity & Active Availability Beacon */}
         <Link
           href="#overview"
+          onClick={() => handleNavClick("#overview")}
           className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan rounded-full px-2 py-1"
         >
           <div className="relative flex items-center justify-center w-2.5 h-2.5">
@@ -61,17 +103,37 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Center: Desktop Anchor Links */}
-        <div className="hidden md:flex items-center gap-1 lg:gap-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="font-sans text-xs lg:text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover px-3 py-1.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-cyan"
-            >
-              {item.label}
-            </Link>
-          ))}
+        {/* Center: Desktop Anchor Links with Sliding Active Pill */}
+        <div className="hidden md:flex items-center gap-1 lg:gap-1.5 p-1 rounded-full bg-surface/50 border border-border-subtle/40">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => handleNavClick(item.href)}
+                className={`relative font-sans text-xs lg:text-sm font-medium px-3.5 py-1.5 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan select-none ${
+                  isActive
+                    ? "text-text-primary font-semibold"
+                    : "text-text-muted hover:text-text-secondary"
+                }`}
+              >
+                {/* Floating capsule pill sliding behind active item */}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeNavPill"
+                    transition={
+                      prefersReduced
+                        ? { duration: 0.01 }
+                        : motionTokens.snappy
+                    }
+                    className="absolute inset-0 rounded-full bg-surface-hover border border-accent-cyan/40 shadow-[0_2px_12px_rgba(56,189,248,0.18)]"
+                  />
+                )}
+                <span className="relative z-10">{item.label}</span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Right: Actions */}

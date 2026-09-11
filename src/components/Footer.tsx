@@ -184,9 +184,9 @@ export function Footer() {
               Let&apos;s connect and build together.
             </h2>
             <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-              Whether you need a software engineer to lead your SaaS product
-              engineering, architect resilient backend systems, or optimize web
-              performance—feel free to reach out directly.
+              Whether you need a software engineer to build and own your SaaS
+              product engineering, architect resilient backend systems, or
+              optimize web performance—feel free to reach out directly.
             </p>
           </div>
 

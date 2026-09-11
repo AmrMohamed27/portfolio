@@ -1,13 +1,17 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Maximize2, Zap } from 'lucide-react';
 import { CaseStudy } from '@/data/portfolio-data';
+import { ArchitecturePipelineRunner } from '@/components/ArchitecturePipelineRunner';
 import { motionTokens } from '@/lib/motion-tokens';
 import { useAccessibleMotion } from '@/lib/use-accessible-motion';
 import { useModalAccessibility } from '@/lib/use-modal-accessibility';
+
+const emptySubscribe = () => () => {};
 
 interface ProjectModalProps {
   project: CaseStudy | null;
@@ -20,6 +24,7 @@ export function ProjectModal({
   onClose,
   onOpenImage,
 }: ProjectModalProps) {
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const containerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const { prefersReduced } = useAccessibleMotion();
@@ -33,12 +38,14 @@ export function ProjectModal({
     closeOnEscape: true,
   });
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {project && (
         <div
           ref={containerRef}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-project-title"
@@ -188,13 +195,14 @@ export function ProjectModal({
               </div>
             </div>
 
-            {/* ASCII Diagram snippet */}
-            {project.architectureDiagramAscii && (
-              <div className="mt-6 p-4 rounded-lg bg-terminal border border-border-subtle font-mono text-[11px] text-accent-cyan overflow-x-auto">
-                <span className="block text-[10px] text-text-muted mb-2 uppercase tracking-wider">
-                  Architecture Overview:
-                </span>
-                <pre>{project.architectureDiagramAscii}</pre>
+            {/* Interactive Architecture Pipeline Runner */}
+            {(project.architectureFlow || project.architectureDiagramAscii) && (
+              <div className="mt-6">
+                <ArchitecturePipelineRunner
+                  flow={project.architectureFlow}
+                  fallbackAscii={project.architectureDiagramAscii}
+                  title={project.title}
+                />
               </div>
             )}
 
@@ -212,6 +220,7 @@ export function ProjectModal({
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

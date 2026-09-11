@@ -15,8 +15,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://amr-mohamed27.vercel.app"),
   title: "Amr Mohamed | Full-Stack & Core Systems Software Engineer",
   description: "Product-focused Full-Stack Software Engineer specializing in high-throughput distributed systems, TypeScript, Next.js, and PostgreSQL.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

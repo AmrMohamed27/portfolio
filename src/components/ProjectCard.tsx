@@ -9,11 +9,11 @@ import {
   Cpu,
   Maximize2,
   Server,
-  Terminal,
   Zap,
 } from 'lucide-react';
 import { CaseStudy } from '@/data/portfolio-data';
 import { ProjectMediaViewer } from '@/components/ProjectMediaViewer';
+import { ArchitecturePipelineRunner } from '@/components/ArchitecturePipelineRunner';
 import { motionTokens } from '@/lib/motion-tokens';
 import { useAccessibleMotion } from '@/lib/use-accessible-motion';
 
@@ -24,27 +24,18 @@ import { useAccessibleMotion } from '@/lib/use-accessible-motion';
 interface FlagshipCaseStudyCardProps {
   study: CaseStudy;
   index: number;
+  inShowcase?: boolean;
 }
 
 export function FlagshipCaseStudyCard({
   study,
   index,
+  inShowcase = false,
 }: FlagshipCaseStudyCardProps) {
-  const { prefersReduced, revealTransition, allowAmbientPulse } =
-    useAccessibleMotion();
+  const { prefersReduced, revealTransition } = useAccessibleMotion();
 
-  return (
-    <motion.article
-      id={study.id}
-      initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{
-        ...revealTransition,
-        delay: prefersReduced ? 0 : index * 0.08,
-      }}
-      className="group relative rounded-2xl border border-border-subtle bg-surface/90 backdrop-blur-md p-5 sm:p-7 lg:p-8 transition-all duration-300 hover:border-border-hover hover:shadow-2xl hover:shadow-blue-500/5 scroll-mt-24"
-    >
+  const cardContent = (
+    <>
       {/* Ambient accent hairline indicator */}
       <div className="absolute inset-x-8 -top-px h-px bg-linear-to-r from-transparent via-accent-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -167,58 +158,41 @@ export function FlagshipCaseStudyCard({
             className="shadow-lg shadow-black/40"
           />
 
-          {/* ASCII Architecture Topology Card */}
-          <div className="rounded-lg border border-border-subtle bg-terminal p-3.5 font-mono text-xs flex flex-col">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-border-muted text-text-muted">
-              <div className="flex items-center gap-2">
-                <Terminal className="w-3.5 h-3.5 text-accent-cyan" />
-                <span className="text-[11px] font-mono text-text-secondary">
-                  system-topology.spec
-                </span>
-              </div>
-              <span className="text-[10px] font-mono uppercase text-accent-emerald flex items-center gap-1">
-                <span
-                  className={`w-1.5 h-1.5 rounded-full bg-accent-emerald ${
-                    allowAmbientPulse ? 'animate-pulse' : ''
-                  } motion-reduce:animate-none`}
-                />
-                Active Flow
-              </span>
-            </div>
-
-            <pre className="text-[10px] sm:text-[11px] leading-relaxed text-accent-cyan/90 overflow-x-auto whitespace-pre selection:bg-accent-cyan/20 py-1.5">
-              {study.architectureDiagramAscii}
-            </pre>
-
-            {/* Architecture Flow Stepper (if present) */}
-            {study.architectureFlow && study.architectureFlow.length > 0 && (
-              <div className="mt-2.5 pt-2.5 border-t border-border-muted space-y-1.5">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-text-muted">
-                  Pipeline Stages:
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-                  {study.architectureFlow.map((flow) => (
-                    <div
-                      key={flow.step}
-                      className="p-2 rounded bg-surface/60 border border-border-muted"
-                    >
-                      <div className="flex items-start gap-1.5 text-accent-cyan font-semibold">
-                        <span className="text-[10px] opacity-70 mt-px">
-                          [{flow.step}]
-                        </span>
-                        <span>{flow.component}</span>
-                      </div>
-                      <p className="mt-0.5 text-[10px] text-text-muted leading-tight">
-                        {flow.detail}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          {/* Interactive Architecture Pipeline Runner */}
+          <ArchitecturePipelineRunner
+            flow={study.architectureFlow}
+            fallbackAscii={study.architectureDiagramAscii}
+            title={study.title}
+          />
         </div>
       </div>
+    </>
+  );
+
+  const sharedClassName =
+    "group relative rounded-2xl border border-border-subtle bg-surface/90 backdrop-blur-md p-5 sm:p-7 lg:p-8 transition-colors duration-200 hover:border-border-hover hover:shadow-2xl hover:shadow-blue-500/5 scroll-mt-24";
+
+  if (inShowcase) {
+    return (
+      <article id={study.id} className={sharedClassName}>
+        {cardContent}
+      </article>
+    );
+  }
+
+  return (
+    <motion.article
+      id={study.id}
+      initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{
+        ...revealTransition,
+        delay: prefersReduced ? 0 : index * 0.08,
+      }}
+      className={sharedClassName}
+    >
+      {cardContent}
     </motion.article>
   );
 }
@@ -238,11 +212,11 @@ export function CompactProjectCard({
   onSelect,
   onOpenImage,
 }: CompactProjectCardProps) {
-  const { prefersReduced } = useAccessibleMotion();
+  const { prefersReduced, hoverLift } = useAccessibleMotion();
 
   return (
     <motion.div
-      layout
+      layout="position"
       id={project.id}
       role="button"
       tabIndex={0}
@@ -254,11 +228,21 @@ export function CompactProjectCard({
           onSelect();
         }
       }}
-      initial={prefersReduced ? { opacity: 1 } : { opacity: 0, scale: 0.96 }}
+      initial={prefersReduced ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
-      transition={motionTokens.revealSpring}
-      className="group flex flex-col justify-between rounded-xl border border-border-subtle bg-surface p-4 sm:p-5 transition-all duration-300 hover:border-border-hover hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-600/5 scroll-mt-24 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan"
+      whileHover={prefersReduced ? undefined : { y: hoverLift }}
+      transition={
+        prefersReduced
+          ? { duration: 0.01 }
+          : {
+              opacity: { duration: 0.2 },
+              scale: { duration: 0.2 },
+              layout: motionTokens.revealSpring,
+              y: motionTokens.microSpring,
+            }
+      }
+      className="group flex flex-col justify-between rounded-xl border border-border-subtle bg-surface p-4 sm:p-5 transition-colors duration-200 hover:border-border-hover hover:shadow-xl hover:shadow-blue-600/5 scroll-mt-24 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan"
     >
       <div>
         {/* Card Thumbnail / Header */}

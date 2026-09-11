@@ -1,7 +1,7 @@
 # Portfolio Content & System Architecture Blueprints
 ## Professional Narrative & Verifiable Case Studies
 **Persona:** Amr Mohamed — Full-Stack & Core Systems Software Engineer  
-**Contact:** `amrmohamed2766@gmail.com` | Phone: `+201281618964` | WhatsApp: [WhatsApp](https://wa.me/201281618964) | [LinkedIn](https://www.linkedin.com/in/amrmohamed27) | [GitHub](https://github.com/amrmohamed27)  
+**Contact:** `amrmohamed2766@gmail.com` | Phone: `+201281618964` | Portfolio: [amr-mohamed27.vercel.app](https://amr-mohamed27.vercel.app/) | WhatsApp: [WhatsApp](https://wa.me/201281618964) | [LinkedIn](https://www.linkedin.com/in/amrmohamed27) | [GitHub](https://github.com/amrmohamed27)  
 **Location / Availability:** Alexandria, Egypt / Remote Global & Gulf (UTC+2 / UTC+3) — Immediate Availability
 
 ---
@@ -179,7 +179,7 @@ export const technicalCapabilities = [
 
 ### Freelance Full-Stack Engineer (HoxDEX, Shahbandar Seeds, Castle Rock)
 *August 2024 – April 2025 | Global & Regional Clients*
-- Delivered high-performance web platforms, Redis caching layers, and bilingual RTL/LTR internationalization.
+- Delivered high-performance web platforms, multilingual landing pages, and bilingual RTL/LTR internationalization.
 
 ### B.Sc. in Communications and Electronics Engineering
 *Graduated June 2024 | Alexandria University, Faculty of Engineering*

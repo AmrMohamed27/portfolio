@@ -21,9 +21,9 @@ export function ProjectMediaViewer({
   badge,
   className = "",
 }: MediaDisplayProps) {
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
+  const [isFullScreenVideo, setIsFullScreenVideo] = useState(false);
 
   const allImages =
     media.screenshots && media.screenshots.length > 0
@@ -35,33 +35,20 @@ export function ProjectMediaViewer({
   const hasImages = allImages.length > 0;
   const hasVideo = Boolean(media.video);
 
-  // 1. If video is provided and active, render interactive HTML5 video player
-  if (hasVideo && isVideoPlaying && media.video) {
-    return (
-      <div
-        className={`relative w-full rounded-lg overflow-hidden border border-border-subtle bg-terminal ${className}`}
-      >
-        <video
-          src={media.video}
-          controls
-          autoPlay
-          muted
-          playsInline
-          className="w-full aspect-video object-cover"
-        >
-          Your browser does not support video playback.
-        </video>
-        <button
-          onClick={() => setIsVideoPlaying(false)}
-          className="absolute top-3 right-3 text-xs px-2 py-1 rounded bg-surface/80 text-text-muted hover:text-text-primary border border-border-subtle backdrop-blur"
-        >
-          Close Video
-        </button>
-      </div>
-    );
-  }
+  const handleOpenVideoModal = () => {
+    setIsFullScreenVideo(true);
+    setIsFullScreenOpen(true);
+  };
 
-  // 2. If screenshots are present, render crisp mockup view with video trigger & gallery thumbs
+  const handleOpenImageModal = (index?: number) => {
+    if (typeof index === "number") {
+      setActiveImageIndex(index);
+    }
+    setIsFullScreenVideo(false);
+    setIsFullScreenOpen(true);
+  };
+
+  // If screenshots are present, render crisp mockup view with video trigger & gallery thumbs
   if (hasImages) {
     const currentSrc = allImages[activeImageIndex] || allImages[0];
     return (
@@ -88,7 +75,7 @@ export function ProjectMediaViewer({
               )}
               {/* Fullscreen Expansion Trigger */}
               <button
-                onClick={() => setIsFullScreenOpen(true)}
+                onClick={() => handleOpenImageModal()}
                 className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded bg-surface border border-border-subtle hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
                 aria-label={`View ${title} screenshot in full screen`}
               >
@@ -111,7 +98,7 @@ export function ProjectMediaViewer({
 
             {/* Hover overlay hint */}
             <div
-              onClick={() => setIsFullScreenOpen(true)}
+              onClick={() => handleOpenImageModal()}
               className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
             >
               <span className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface/90 border border-border-subtle text-text-primary font-medium text-xs shadow-lg shadow-black/50 hover:bg-surface transition-all">
@@ -124,7 +111,7 @@ export function ProjectMediaViewer({
             {hasVideo && (
               <div className="absolute bottom-3 right-3 z-10">
                 <button
-                  onClick={() => setIsVideoPlaying(true)}
+                  onClick={handleOpenVideoModal}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-primary hover:bg-accent-hover text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
                 >
                   <Play className="w-3.5 h-3.5 fill-white" />
@@ -140,7 +127,7 @@ export function ProjectMediaViewer({
               {allImages.map((img, idx) => (
                 <button
                   key={img}
-                  onClick={() => setActiveImageIndex(idx)}
+                  onClick={() => handleOpenImageModal(idx)}
                   className={`relative w-12 h-8 rounded overflow-hidden border transition-all shrink-0 cursor-pointer ${
                     activeImageIndex === idx
                       ? "border-accent-cyan ring-1 ring-accent-cyan"
@@ -158,11 +145,15 @@ export function ProjectMediaViewer({
         {/* Fullscreen Lightbox / Modal */}
         <FullscreenLightbox
           isOpen={isFullScreenOpen}
-          onClose={() => setIsFullScreenOpen(false)}
-          title={title}
+          onClose={() => {
+            setIsFullScreenOpen(false);
+            setIsFullScreenVideo(false);
+          }}
+          title={isFullScreenVideo ? `${title} — Video Walkthrough` : title}
           images={allImages}
           activeIndex={activeImageIndex}
           onIndexChange={setActiveImageIndex}
+          video={isFullScreenVideo ? media.video : undefined}
         />
       </>
     );

@@ -27,7 +27,7 @@ const metricIconMap: Record<
   cost: Zap,
   connectors: Database,
   speed: Timer,
-  leadership: Users,
+  mentorship: Users,
 };
 
 export function MetricsTicker() {

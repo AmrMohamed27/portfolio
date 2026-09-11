@@ -1,6 +1,5 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
-import { MetricsTicker } from "@/components/MetricsTicker";
 import { CaseStudies } from "@/components/CaseStudies";
 import { SkillsGrid } from "@/components/SkillsGrid";
 import { Timeline } from "@/components/Timeline";
@@ -16,16 +15,13 @@ export default function Home() {
         {/* Command Hero Component [PORT-202] */}
         <Hero />
 
-        {/* Quantified Impact Telemetry Ticker [PORT-203] */}
-        <MetricsTicker />
-
         {/* Flagship Architectural Case Studies & Extended Showcase [PORT-301] */}
         <CaseStudies />
 
         {/* Interactive Capabilities Matrix [PORT-302] */}
         <SkillsGrid />
 
-        {/* Career & Leadership Timeline [PORT-401] */}
+        {/* Career & Experience Timeline [PORT-401] */}
         <Timeline />
       </main>
 
