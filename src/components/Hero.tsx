@@ -145,10 +145,10 @@ export function Hero() {
               transition={motionTokens.microSpring}
             >
               <Link
-                href="#case-studies"
+                href="#projects"
                 className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-white font-medium text-xs sm:text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan cursor-pointer"
               >
-                <span>Explore Case Studies</span>
+                <span>Explore Projects</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </motion.div>

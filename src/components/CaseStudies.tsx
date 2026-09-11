@@ -134,8 +134,8 @@ export function CaseStudies() {
 
   return (
     <section
-      id="case-studies"
-      aria-labelledby="case-studies-heading"
+      id="projects"
+      aria-labelledby="projects-heading"
       className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-300 mx-auto w-full border-t border-border-subtle"
     >
       {/* Background Ambience Glow */}
@@ -148,10 +148,10 @@ export function CaseStudies() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
         <div className="flex flex-col items-start gap-2">
           <h2
-            id="case-studies-heading"
+            id="projects-heading"
             className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary"
           >
-            Architectural Case Studies
+            Featured Systems &amp; Architecture
           </h2>
           <p className="text-sm sm:text-base text-text-secondary max-w-2xl leading-relaxed">
             Production systems featuring high-throughput query pipelines,
@@ -241,7 +241,7 @@ export function CaseStudies() {
                 <button
                   type="button"
                   onClick={handlePrevFlagship}
-                  aria-label="Previous flagship case study"
+                  aria-label="Previous flagship system"
                   className="p-2 sm:p-2.5 rounded-xl bg-surface border border-border-subtle hover:border-accent-cyan hover:text-accent-cyan text-text-secondary transition-colors cursor-pointer active:scale-95"
                 >
                   <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -249,7 +249,7 @@ export function CaseStudies() {
                 <button
                   type="button"
                   onClick={handleNextFlagship}
-                  aria-label="Next flagship case study"
+                  aria-label="Next flagship system"
                   className="p-2 sm:p-2.5 rounded-xl bg-surface border border-border-subtle hover:border-accent-cyan hover:text-accent-cyan text-text-secondary transition-colors cursor-pointer active:scale-95"
                 >
                   <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />

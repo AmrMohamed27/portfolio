@@ -136,7 +136,7 @@ export const telemetryMetrics: MetricTelemetry[] = [
     highlight: true,
     project: {
       name: "MyQuery.AI",
-      href: "#case-studies",
+      href: "#projects",
     },
   },
   {
@@ -150,7 +150,7 @@ export const telemetryMetrics: MetricTelemetry[] = [
     highlight: true,
     project: {
       name: "MyQuery.AI",
-      href: "#case-studies",
+      href: "#projects",
     },
   },
   {
@@ -165,7 +165,7 @@ export const telemetryMetrics: MetricTelemetry[] = [
     highlight: false,
     project: {
       name: "MyQuery.AI",
-      href: "#case-studies",
+      href: "#projects",
     },
   },
   {
@@ -180,7 +180,7 @@ export const telemetryMetrics: MetricTelemetry[] = [
     highlight: false,
     project: {
       name: "Trseah AI",
-      href: "#case-studies",
+      href: "#projects",
     },
   },
   {

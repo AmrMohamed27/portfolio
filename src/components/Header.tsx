@@ -10,7 +10,7 @@ import { useAccessibleMotion } from "@/lib/use-accessible-motion";
 
 const navItems = [
   { label: "Overview", href: "#overview" },
-  { label: "Case Studies", href: "#case-studies" },
+  { label: "Projects", href: "#projects" },
   { label: "Capabilities", href: "#skills" },
   { label: "Experience", href: "#experience" },
   { label: "Contact", href: "#contact" },
